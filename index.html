@@ -1,25 +1,121 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" class="antialiased">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lukáš Vojtěšek | Digital Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;700;900&display=swap"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700;900&display=swap"
         rel="stylesheet">
+
     <style>
-        /* Plynulý scroll */
-        html {
-            scroll-behavior: smooth;
+        html.lenis {
+            height: auto;
         }
 
-        /* Základní typografie a barvy */
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        @media (min-width: 769px) {
+            * {
+                cursor: none !important;
+            }
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #faf8ff;
+            color: #0b0b0b;
             overflow-x: hidden;
+        }
+
+        ::selection {
+            background: #a855f7;
+            color: #ffffff;
+        }
+
+        ::-moz-selection {
+            background: #a855f7;
+            color: #ffffff;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -2;
+            background-image:
+                linear-gradient(to right, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .cursor-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor-dot {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #a855f7;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+
+        .cursor-main {
+            width: 10px;
+            height: 10px;
+            z-index: 2;
+        }
+
+        .cursor-trail {
+            width: 6px;
+            height: 6px;
+            opacity: 0.4;
+            z-index: 1;
+        }
+
+        .cursor-wrapper.hover-active .cursor-main {
+            width: 70px;
+            height: 70px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+            transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1), height 0.4s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s;
+        }
+
+        .cursor-wrapper.hover-active .cursor-trail {
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cursor-wrapper {
+                display: none;
+            }
         }
 
         .bebas {
@@ -27,342 +123,712 @@
             letter-spacing: 0.02em;
         }
 
-        /* Hero Glow efekt */
-        .hero-glow {
-            position: absolute;
-            top: 10%;
-            right: -5%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            filter: blur(60px);
-        }
-
-        /* Styl karet */
-        .card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: #a855f7;
-            box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.15);
-        }
-
-        /* Aktivní karty */
-        .card-active {
-            background: #ffffff;
-            border: 2px solid #a855f7 !important;
-            border-radius: 4px;
-            box-shadow: 0 4px 20px -5px rgba(168, 85, 247, 0.1);
-        }
-
-        /* Navbar linka */
-        .nav-border {
-            border-bottom: 2px solid #a855f7;
-        }
-
-        /* Gradient text */
         .grad-text {
-            background: linear-gradient(90deg, #a855f7, #6366f1);
+            background: linear-gradient(90deg, #9333ea, #4f46e5, #db2777);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 6s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        #name-fill {
+            background: linear-gradient(to right, #a855f7 50%, #ffffff 50%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Tech Tagy */
-        .tech-tag {
+        .tech-tag-dark {
             display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border: 2px solid #000000;
+            padding: 0.6rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: #ffffff;
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(5px);
+        }
+
+        .tech-tag-dark:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: #ffffff;
+            color: #581c87;
+            border-color: #ffffff;
+            box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .dark-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .tech-tag:hover {
-            transform: scale(1.1);
-            background-color: #a855f7;
-            border-color: #a855f7;
-            color: #ffffff;
+        .job-card-container {
+            perspective: 1500px;
         }
 
-        /* Šipka nahoru */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: #a855f7;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 100;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        .job-item {
+            transform-style: preserve-3d;
+            position: relative;
         }
 
-        .back-to-top:hover {
-            transform: translateY(-5px);
-            background-color: #000;
+        .card-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(168, 85, 247, 0.15), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .arrow-up {
-            width: 14px;
-            height: 14px;
-            border-top: 3px solid white;
-            border-left: 3px solid white;
-            transform: rotate(45deg);
-            margin-top: 6px;
+        .job-item:hover .card-glow {
+            opacity: 1;
         }
 
-        /* Hover efekt pro řádky v seznamu práce */
-        .job-row:hover .job-year {
-            color: #a855f7;
+        .job-content {
+            position: relative;
+            z-index: 10;
+            transform: translateZ(20px);
         }
 
-        .job-row:hover {
-            background-color: #fafafa;
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
         }
     </style>
 </head>
 
 <body>
+    <div class="cursor-wrapper">
+        <div class="cursor-dot cursor-main"></div>
+        <div class="cursor-dot cursor-trail"></div>
+        <div class="cursor-dot cursor-trail"></div>
+        <div class="cursor-dot cursor-trail"></div>
+    </div>
 
-    <nav
-        class="fixed w-full z-50 bg-white/90 backdrop-blur-md nav-border px-6 md:px-12 py-5 flex justify-between items-center">
-        <div class="bebas text-3xl tracking-tight uppercase">LUKÁŠ VOJTĚŠEK<span class="text-purple-600">_</span></div>
-        <div class="hidden md:flex items-center space-x-12 text-sm font-black uppercase tracking-[0.2em]">
-            <a href="#home" class="hover:text-purple-600 transition">Domů</a>
-            <a href="#about" class="hover:text-purple-600 transition">O mně</a>
-            <a href="#experience" class="hover:text-purple-600 transition">Zkušenosti</a>
-            <a href="#contact" class="hover:text-purple-600 transition">Kontakt</a>
+    <div class="bg-grid"></div>
+
+    <nav class="fixed w-full z-50 bg-[#070314]/70 backdrop-blur-xl px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-500 ease-out border-b border-purple-500/20"
+        id="navbar">
+        <a href="#home" class="hover-trigger bebas text-3xl tracking-tight uppercase group flex items-center">
+            <span id="name-fill">LUKÁŠ VOJTĚŠEK</span>
+            <span
+                class="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-1">_</span>
+        </a>
+        <div
+            class="hidden md:flex items-center space-x-12 text-sm font-black uppercase tracking-[0.15em] text-gray-300">
+            <a href="#about" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
+                <span
+                    class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">O
+                    mně</span>
+                <span
+                    class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">O
+                    mně</span>
+            </a>
+            <a href="#experience" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
+                <span
+                    class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Zkušenosti</span>
+                <span
+                    class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Zkušenosti</span>
+            </a>
+            <a href="#contact" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
+                <span
+                    class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Kontakt</span>
+                <span
+                    class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Kontakt</span>
+            </a>
         </div>
+        <div class="absolute bottom-0 left-0 h-[3px] bg-purple-500 w-0 transition-none shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+            id="scroll-progress"></div>
     </nav>
 
-    <section id="home" class="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-24 overflow-hidden">
-        <div class="hero-glow"></div>
-        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-
-            <div class="md:col-span-7">
-                <h1 class="bebas text-[18vw] md:text-[11vw] leading-[0.8] uppercase mb-10">
-                    Digital <br> <span class="grad-text">Developer</span>
-                </h1>
-                <p class="text-purple-600 text-xl md:text-3xl font-light uppercase tracking-wide leading-none mb-2">
-                    Fakulta aplikované informatiky | Univerzita Tomáše Bati
-                </p>
-                <p class="text-gray-400 text-lg uppercase font-bold tracking-widest italic">
-                    Informační technologie v administrativě
-                </p>
+    <main>
+        <section id="home"
+            class="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-12 pt-24 overflow-hidden">
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] bg-purple-600/10 blur-[120px] rounded-full z-[-1] animate-pulse-slow">
             </div>
 
-            <div class="md:col-span-5 relative">
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-8 z-10">
+                    <h1 class="hero-title bebas text-[18vw] lg:text-[10vw] leading-[0.85] uppercase mb-10">
+                        <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
+                            <span class="block translate-y-[110%] hero-text-line pr-2">Digital</span>
+                        </div>
+                        <div class="overflow-hidden relative mt-2 pb-4 pr-6 -mr-6">
+                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">Developer&nbsp;</span>
+                        </div>
+                    </h1>
+                    <div class="hero-subtitle opacity-0">
+                        <p
+                            class="text-gray-900 text-xl md:text-2xl font-normal uppercase tracking-wide leading-none mb-4">
+                            Fakulta aplikované informatiky | UTB
+                        </p>
+                        <p class="text-purple-600 text-sm md:text-base uppercase font-bold tracking-[0.2em]">
+                            Informační technologie v administrativě
+                        </p>
+                    </div>
+                </div>
+
                 <div
-                    class="relative z-10 w-full aspect-[4/5] overflow-hidden border-[6px] border-black shadow-[20px_20px_0px_0px_#a855f7]">
-                    <img src="fotka.jpeg" alt="Lukáš Vojtěšek"
-                        class="w-full h-full object-cover">
+                    class="lg:col-span-4 relative hero-image opacity-0 md:translate-x-8 lg:translate-x-0 mt-12 lg:mt-0">
+                    <div
+                        class="relative z-10 w-full md:w-3/4 lg:w-full aspect-[4/5] overflow-hidden rounded-2xl group border-[6px] border-purple-200 shadow-[20px_20px_0px_0px_rgba(168,85,247,0.3)] hover:shadow-[10px_10px_0px_0px_rgba(168,85,247,0.6)] hover:translate-x-2 hover:translate-y-2 transition-all duration-500 mx-auto">
+                        <div
+                            class="absolute inset-0 bg-purple-900/30 mix-blend-overlay z-20 group-hover:opacity-0 transition-opacity duration-700">
+                        </div>
+                        <img src="fotka.jpeg" alt="Lukáš Vojtěšek"
+                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-expo-out"
+                            onerror="this.src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop';">
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="py-24 px-6 md:px-12 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="bebas text-6xl mb-12 uppercase text-black">Akademická <span class="text-purple-600">Cesta</span>
-            </h2>
+        <section class="py-32 px-6 md:px-12 relative z-10">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="reveal-up bebas text-5xl md:text-7xl mb-16 uppercase text-black">Akademická <span
+                        class="text-purple-600">Cesta</span></h2>
+
+                <div class="space-y-6">
+                    <div
+                        class="reveal-up group bg-white border-2 border-purple-300 hover:border-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.25)] transition-all duration-500 hover-trigger">
+                        <div>
+                            <span
+                                class="text-purple-600 bg-purple-100 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block">2023
+                                - Současnost</span>
+                            <a href="https://www.utb.cz" target="_blank" class="block">
+                                <h3
+                                    class="bebas text-4xl md:text-5xl uppercase group-hover:text-purple-700 transition-colors">
+                                    Univerzita Tomáše Bati ve Zlíně</h3>
+                            </a>
+                            <a href="https://www.utb.cz" target="_blank"
+                                class="text-purple-500 hover:text-purple-700 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.utb.cz</a>
+                        </div>
+                        <div class="mt-4 md:mt-0 md:text-right">
+                            <p class="font-bold text-lg md:text-xl text-gray-900">Informační technologie v
+                                administrativě</p>
+                            <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">
+                                Fakulta aplikované informatiky</p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="reveal-up group bg-white border-2 border-purple-200 hover:border-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.25)] transition-all duration-500 hover-trigger">
+                        <div>
+                            <span
+                                class="text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block group-hover:bg-purple-100 group-hover:text-purple-600 transition-colors">2019
+                                - 2023</span>
+                            <a href="https://www.spsoa-ub.cz" target="_blank" class="block">
+                                <h3
+                                    class="bebas text-4xl md:text-5xl uppercase group-hover:text-purple-700 transition-colors text-gray-400">
+                                    SPŠ a OA Uherský Brod</h3>
+                            </a>
+                            <a href="https://www.spsoa-ub.cz" target="_blank"
+                                class="text-gray-400 hover:text-purple-600 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.spsoa-ub.cz</a>
+                        </div>
+                        <div class="mt-4 md:mt-0 md:text-right opacity-80">
+                            <p class="font-bold text-lg md:text-xl text-gray-900">Strojírenství - Metrologie</p>
+                            <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">
+                                Maturitní zkouška</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-32 px-6 md:px-12 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+                <div
+                    class="reveal-up lg:col-span-8 p-10 md:p-16 bg-gradient-to-br from-[#3b0764] to-[#1e1b4b] border border-purple-500/20 rounded-[2rem] flex flex-col justify-center transition-all duration-500 hover:shadow-[0_20px_80px_-20px_rgba(168,85,247,0.4)] shadow-xl relative overflow-hidden hover-trigger">
+                    <div
+                        class="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/20 blur-[60px] rounded-full pointer-events-none">
+                    </div>
+
+                    <h2 class="bebas text-5xl md:text-7xl mb-8 uppercase text-white relative z-10">Analýza <span
+                            class="text-purple-400">&</span> Kód</h2>
+
+                    <p
+                        class="text-purple-100 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl font-light relative z-10">
+                        Spojuji logiku s estetikou. Má workflow je postavena na <strong
+                            class="text-white font-semibold decoration-purple-400 underline decoration-2 underline-offset-4">hluboké
+                            integraci umělé inteligence</strong>, což mi umožňuje dodávat komplexní řešení rychleji.
+                        Ušetřený čas investuji do <strong class="text-white font-semibold">detailního UI
+                            designu</strong>.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mb-6 relative z-10">
+                        <span class="tech-tag-dark hover-trigger">HTML / CSS</span>
+                        <span class="tech-tag-dark hover-trigger">PHP</span>
+                        <span class="tech-tag-dark hover-trigger">MySQL</span>
+                        <span class="tech-tag-dark hover-trigger">JavaScript</span>
+                        <span class="tech-tag-dark hover-trigger border-purple-400 text-purple-300">AI
+                            Integration</span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-6 border-t border-white/10 relative z-10">
+                        <span class="dark-tag">Angličtina B2/C1</span>
+                        <span class="dark-tag">ŘP Skupiny B</span>
+                    </div>
+                </div>
+
+                <div
+                    class="reveal-up lg:col-span-4 p-10 md:p-12 rounded-[2rem] bg-[#0a0a0a] text-white flex flex-col justify-between relative overflow-hidden group hover-trigger">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-purple-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out">
+                    </div>
+                    <div class="bebas text-2xl text-purple-400 uppercase relative z-10">Workflow</div>
+                    <div class="relative z-10 mt-16 lg:mt-0">
+                        <h3 class="bebas text-6xl md:text-7xl leading-none uppercase mb-6">AI<br><span
+                                class="text-white">Native</span></h3>
+                        <div class="h-[2px] w-full bg-white/10 mb-6 relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-purple-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-expo-out">
+                            </div>
+                        </div>
+                        <p
+                            class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 group-hover:text-white transition-colors">
+                            ChatGPT / Gemini / Copilot</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto mt-8 reveal-up">
+                <div
+                    class="p-10 md:p-14 bg-purple-600 text-white border-2 border-purple-400 rounded-[2rem] relative overflow-hidden shadow-[0_20px_50px_-15px_rgba(147,51,234,0.5)] hover-trigger">
+                    <div
+                        class="absolute left-0 bottom-0 w-80 h-80 bg-purple-400/30 rounded-full blur-[80px] pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute right-10 top-10 w-40 h-40 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none">
+                    </div>
+
+                    <h3
+                        class="bebas text-3xl md:text-4xl uppercase text-white mb-6 flex items-center gap-3 relative z-10">
+                        <div class="w-3 h-3 rounded-full bg-white animate-pulse"></div> Drive & Osobnost
+                    </h3>
+
+                    <p class="text-purple-50 text-lg md:text-2xl leading-relaxed max-w-4xl font-light relative z-10">
+                        Jsem pracovitý a spolehlivý člověk se zájmem o technologie a IT. Rád se učím nové věci, rychle
+                        se přizpůsobuji a hledám příležitosti, kde budu moci své znalosti dále rozvíjet. Zároveň se
+                        snažím pracovat efektivně a ty nejmodernější nástroje – <strong
+                            class="text-white font-semibold">včetně umělé inteligence</strong> – ihned aplikovat do
+                        praxe.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience"
+            class="py-32 px-6 md:px-12 bg-[#090314] relative border-t-4 border-purple-600 rounded-t-[3rem] -mt-8 z-20">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-purple-900/20 blur-[150px] rounded-full pointer-events-none">
+            </div>
+
+            <div class="max-w-5xl mx-auto relative z-10">
+                <h2 class="reveal-up bebas text-6xl md:text-8xl mb-24 uppercase text-center text-white">Pracovní <span
+                        class="text-purple-500">Historie</span></h2>
+
+                <div
+                    class="reveal-scale bg-[#150a24] text-white p-10 md:p-16 rounded-[3rem] mb-16 relative overflow-hidden group hover-trigger shadow-2xl shadow-black/50 border-2 border-purple-500/30 hover:border-purple-400 transition-all duration-500">
+                    <div
+                        class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 group-hover:bg-purple-500/40 transition-colors duration-700">
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 relative z-10">
+                        <div>
+                            <span
+                                class="bg-purple-600 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block shadow-lg shadow-purple-900">Aktuální
+                                pozice</span>
+                            <h3 class="bebas text-6xl md:text-8xl uppercase tracking-tight">Orkla Foods</h3>
+                        </div>
+                        <span class="bebas text-2xl md:text-3xl text-purple-400 mt-6 md:mt-0">2022 - Současnost</span>
+                    </div>
+                    <div class="relative z-10 border-t border-purple-500/20 pt-8">
+                        <p class="text-gray-300 text-xl leading-relaxed max-w-3xl font-light">
+                            Klíčová dlouhodobá praxe s více než <strong class="text-white font-bold">1400+ odpracovanými
+                                hodinami</strong>. Výpomoc s logistikou, skladové procesy a zaučování. Důraz na vysokou
+                            flexibilitu a řešení problémů.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="space-y-6 relative before:absolute before:left-[3.5rem] before:top-0 before:h-full before:w-[2px] before:bg-purple-900/50 before:hidden md:before:block">
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/20 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-purple-500 rounded-full hidden md:block z-20 group-hover:bg-purple-500 transition-colors shadow-[0_0_10px_rgba(168,85,247,0.5)]">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span class="bebas text-3xl text-purple-400">2023</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="bebas text-3xl md:text-4xl uppercase mb-2 text-white">Solar Global
+                                        Service</h4>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-purple-300 mb-4">Junior
+                                        Projektant</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Úpravy výkresů v AutoCADu,
+                                        spolupráce na solárních elektrárnách, zapojování bateriových systémů a
+                                        kompletace podkladů.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-colors">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span
+                                        class="bebas text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2022</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4
+                                        class="bebas text-3xl md:text-4xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">
+                                        MESIT Holding</h4>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">
+                                        Kontrola Kvality</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Metrologie, výstupní kontrola
+                                        výrobků z dílen a namátkové měření kvality.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-colors">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span
+                                        class="bebas text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2021</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4
+                                        class="bebas text-3xl md:text-4xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">
+                                        PRIMA BILAVČÍK</h4>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">
+                                        Laboratorní technik</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Odborná praxe v měřicích
+                                        laboratořích, kontrola rozměrů a kvality výrobků.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-colors">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span
+                                        class="bebas text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2020</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4
+                                        class="bebas text-3xl md:text-4xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">
+                                        DFK Cab</h4>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">
+                                        Sklad / Expedice</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Manipulace se zbožím, skládání a
+                                        balení kabin, příprava výrobků k exportu.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-colors">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span
+                                        class="bebas text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2020</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4
+                                        class="bebas text-3xl md:text-4xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">
+                                        Hanon Systems Autopal</h4>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">
+                                        Operátor výroby</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Obsluha výrobních zařízení
+                                        (laser, pec), práce na lince a kontrola parametrů.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="job-card-container reveal-up">
+                        <div
+                            class="job-item p-8 pl-10 md:pl-24 rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col md:flex-row gap-6 md:gap-12 cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="card-glow"></div>
+                            <div
+                                class="absolute left-[3.5rem] top-1/2 -translate-y-1/2 w-4 h-4 bg-[#0f071a] border-4 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-colors">
+                            </div>
+
+                            <div class="job-content flex flex-col md:flex-row gap-6 md:gap-12 w-full">
+                                <div class="w-32 flex-shrink-0 pt-1">
+                                    <span
+                                        class="bebas text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2018
+                                        - 2020</span>
+                                </div>
+                                <div class="flex-grow">
+                                    <h4
+                                        class="bebas text-3xl md:text-4xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">
+                                        Aircraft Industries</h4>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">
+                                        Pomocné a montážní práce</p>
+                                    <p class="text-gray-400 text-base leading-relaxed">Úklid a likvidace vybavení ze
+                                        starých skladových prostor, pomocné montážní práce (sestavování regálů a polic).
+                                        Práce v průmyslovém prostředí s důrazem na bezpečnost.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact"
+            class="py-32 px-6 md:px-12 bg-[#05010a] text-white rounded-t-[4rem] -mt-10 overflow-hidden relative border-t-2 border-purple-900 z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+            <div
+                class="absolute bottom-0 left-0 w-[800px] h-[800px] bg-purple-600/20 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3">
+            </div>
 
             <div
-                class="group border-t border-black py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:bg-gray-50 transition duration-300">
-                <div>
-                    <span class="text-purple-600 font-bold uppercase tracking-widest text-xs mb-3 block">2023 -
-                        Současnost</span>
-                    <a href="https://www.utb.cz" target="_blank"
-                        class="bebas text-4xl md:text-6xl uppercase group-hover:text-purple-600 transition">
-                        Univerzita Tomáše Bati ve Zlíně
-                    </a>
+                class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center lg:items-end gap-20 relative z-10">
+                <div class="text-center lg:text-left">
+                    <h2 class="reveal-up bebas text-[16vw] lg:text-[11vw] uppercase leading-[0.8] mb-8 tracking-tight">
+                        <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
+                            <span class="block translate-y-[110%] hero-text-line pr-2">Pojďme</span>
+                        </div>
+                        <div class="overflow-hidden relative mt-2 pb-4 pr-6 -mr-6">
+                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">tvořit.&nbsp;</span>
+                        </div>
+                    </h2>
+                    <div
+                        class="inline-flex items-center border border-purple-500/30 rounded-full px-6 py-3 bg-purple-900/20 backdrop-blur-md">
+                        <span class="relative flex h-3 w-3 mr-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-purple-200">
+                            Open for opportunities
+                        </p>
+                    </div>
                 </div>
-                <div class="mt-4 md:mt-0 md:text-right">
-                    <p class="font-bold text-xl text-purple-600">Informační technologie v administrativě</p>
-                    <p class="text-gray-500 text-sm uppercase tracking-wide mt-1">Fakulta aplikované informatiky</p>
-                </div>
-            </div>
 
-            <div
-                class="group border-t border-b border-black py-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:bg-gray-50 transition duration-300">
-                <div>
-                    <span class="text-purple-600 font-bold uppercase tracking-widest text-xs mb-3 block">2019 -
-                        2023</span>
-                    <a href="https://www.spsoa-ub.cz" target="_blank"
-                        class="bebas text-4xl md:text-6xl uppercase group-hover:text-purple-600 transition">
-                        SPŠ a OA Uherský Brod
-                    </a>
-                </div>
-                <div class="mt-4 md:mt-0 md:text-right">
-                    <p class="font-bold text-xl text-purple-600">Strojírenství se zaměřením na metrologii</p>
-                    <p class="text-gray-500 text-sm uppercase tracking-wide mt-1">Maturitní zkouška</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="py-32 px-6 md:px-12 bg-gray-50">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div class="md:col-span-8 p-10 md:p-16 card-active flex flex-col justify-center">
-                <h2 class="bebas text-6xl mb-6 uppercase text-black">Analýza & Kód</h2>
-                <p class="text-gray-600 text-xl leading-relaxed mb-10">
-                    Spojuji logiku s estetikou. Má workflow je postavena na <strong>hluboké integraci umělé
-                        inteligence</strong>, což mi umožňuje dodávat komplexní řešení rychleji. Ušetřený čas investuji
-                    do <strong>detailního UI designu</strong>, protože věřím, že na vzhledu záleží stejně jako na
-                    backendu.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <span class="tech-tag">HTML / CSS</span>
-                    <span class="tech-tag">PHP</span>
-                    <span class="tech-tag">MySQL</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">MAMP / XAMPP</span>
-                </div>
-            </div>
-            <div
-                class="md:col-span-4 p-10 card bg-gradient-to-br from-purple-600 to-indigo-700 text-white border-none flex flex-col justify-between">
-                <div class="bebas text-2xl opacity-50 uppercase">Workflow</div>
-                <h3 class="bebas text-7xl leading-none uppercase">AI Native</h3>
-                <p class="text-sm font-bold uppercase tracking-[0.2em] mt-4 opacity-80">ChatGPT / Gemini / Copilot</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience" class="py-32 px-6 md:px-12 bg-white">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="bebas text-8xl mb-16 uppercase italic">Pracovní <span class="text-purple-600">Historie</span>
-            </h2>
-
-            <div class="bg-gray-50 border-l-4 border-purple-600 p-8 md:p-12 mb-16 shadow-lg">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6">
-                    <div>
+                <div class="flex flex-col space-y-6 w-full lg:w-auto">
+                    <a href="mailto:l_vojtesek@utb.cz"
+                        class="hover-trigger group block bg-white/5 hover:bg-purple-600/20 border border-purple-500/20 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
                         <span
-                            class="bg-purple-600 text-white px-3 py-1 text-xs font-bold uppercase tracking-widest mb-2 inline-block">Aktuální
-                            pozice</span>
-                        <h3 class="bebas text-5xl md:text-7xl uppercase text-black">Orkla Foods</h3>
-                    </div>
-                    <span class="bebas text-3xl text-purple-600 mt-2 md:mt-0">2022 - Současnost</span>
+                            class="block bebas text-3xl md:text-5xl group-hover:text-white transition-colors">l_vojtesek@utb.cz</span>
+                        <span
+                            class="block text-xs uppercase tracking-widest text-gray-500 group-hover:text-purple-300 mt-2">Univerzitní
+                            email</span>
+                    </a>
+                    <a href="mailto:lukas.vojtesek04@gmail.com"
+                        class="hover-trigger group block bg-white/5 hover:bg-purple-600/20 border border-purple-500/20 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
+                        <span
+                            class="block bebas text-3xl md:text-5xl group-hover:text-white transition-colors">lukas.vojtesek04@gmail.com</span>
+                        <span
+                            class="block text-xs uppercase tracking-widest text-gray-500 group-hover:text-purple-300 mt-2">Osobní
+                            email</span>
+                    </a>
                 </div>
-                <p class="text-gray-700 text-lg leading-relaxed max-w-2xl">
-                    Klíčová dlouhodobá praxe s více než <strong>1400 odpracovanými hodinami</strong>. Výpomoc v
-                    logistice, skladové procesy a výpomoc na všech pozicích ve skladu. Důraz na flexibilitu a efektivní
-                    řešení problémů v reálném čase.
-                </p>
             </div>
-
-            <div class="space-y-0">
-
-                <div
-                    class="job-row border-t border-gray-200 py-8 flex flex-col md:flex-row gap-6 transition-all duration-300">
-                    <div class="w-48 flex-shrink-0">
-                        <span class="job-year bebas text-3xl text-gray-400 transition-colors">2023</span>
-                    </div>
-                    <div class="flex-grow">
-                        <h4 class="bebas text-4xl uppercase mb-2">Solar Global</h4>
-                        <p class="text-sm font-bold uppercase tracking-widest text-purple-600 mb-2">Junior Projektant
-                        </p>
-                        <p class="text-gray-600">Úpravy výkresů v AutoCADu, kompletace technických podkladů pro solární
-                            elektrárny.</p>
-                    </div>
-                </div>
-
-                <div
-                    class="job-row border-t border-gray-200 py-8 flex flex-col md:flex-row gap-6 transition-all duration-300">
-                    <div class="w-48 flex-shrink-0">
-                        <span class="job-year bebas text-3xl text-gray-400 transition-colors">2022</span>
-                    </div>
-                    <div class="flex-grow">
-                        <h4 class="bebas text-4xl uppercase mb-2">MESIT Holding</h4>
-                        <p class="text-sm font-bold uppercase tracking-widest text-purple-600 mb-2">Kontrola Kvality</p>
-                        <p class="text-gray-600">Metrologie, výstupní kontrola výrobků a namátkové měření.</p>
-                    </div>
-                </div>
-
-                <div
-                    class="job-row border-t border-gray-200 py-8 flex flex-col md:flex-row gap-6 transition-all duration-300">
-                    <div class="w-48 flex-shrink-0">
-                        <span class="job-year bebas text-3xl text-gray-400 transition-colors">2021</span>
-                    </div>
-                    <div class="flex-grow">
-                        <h4 class="bebas text-4xl uppercase mb-2">PRIMA BILAVČÍK</h4>
-                        <p class="text-sm font-bold uppercase tracking-widest text-purple-600 mb-2">Laboratorní technik
-                            (Praxe)</p>
-                        <p class="text-gray-600">Práce v akreditovaných měřicích laboratořích, kontrola rozměrů.</p>
-                    </div>
-                </div>
-
-                <div
-                    class="job-row border-t border-b border-gray-200 py-8 flex flex-col md:flex-row gap-6 transition-all duration-300">
-                    <div class="w-48 flex-shrink-0">
-                        <span class="job-year bebas text-3xl text-gray-400 transition-colors">2018 - 2020</span>
-                    </div>
-                    <div class="flex-grow">
-                        <h4 class="bebas text-4xl uppercase mb-2">Průmyslový Start</h4>
-                        <p class="text-sm font-bold uppercase tracking-widest text-purple-600 mb-2">Hanon Systems /
-                            Aircraft Industries</p>
-                        <p class="text-gray-600">Obsluha CNC a laserových zařízení, montážní práce v leteckém průmyslu.
-                        </p>
-                    </div>
-                </div>
-
+            <div
+                class="max-w-7xl mx-auto mt-32 pt-8 border-t border-purple-900/50 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm uppercase tracking-wider">
+                <p>© 2024 Lukáš Vojtěšek</p>
+                <p>Design & Code with <span class="text-purple-500">AI</span></p>
             </div>
-        </div>
-    </section>
+        </footer>
+    </main>
 
-<footer id="contact" class="py-24 px-6 md:px-12 bg-white border-t-2 border-black">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-        <div>
-            <h2 class="bebas text-8xl md:text-[10vw] uppercase leading-none mb-8">
-                Pojďme <br> <span class="grad-text">tvořit</span>.
-            </h2>
-            <p class="text-xs font-black uppercase tracking-[0.4em] opacity-40 italic mt-4">
-                <span class="border-b-4 border-purple-600 pb-1 text-black opacity-100">Ready for work</span>
-            </p>
-        </div>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        const expoOut = "expo.out";
 
-        <div class="flex flex-col space-y-6 w-full md:w-auto">
-            <a href="mailto:l_vojtesek@utb.cz" 
-               class="group block card-active py-12 px-10 transition-all hover:scale-105 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="bebas text-3xl md:text-5xl grad-text">l_vojtesek@utb.cz</span>
-                    <span class="text-gray-400 text-xs font-black uppercase tracking-[0.3em] mt-3 group-hover:text-purple-600 transition-colors">
-                        Zlín
-                    </span>
-                </div>
-            </a>
+        const lenis = new Lenis({
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+            mouseMultiplier: 0.8,
+            smoothTouch: false,
+        });
 
-            <a href="mailto:lukas.vojtesek04@gmail.com" 
-               class="group block card-active py-12 px-10 transition-all hover:scale-105 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="bebas text-3xl md:text-5xl grad-text">lukas.vojtesek04@gmail.com</span>
-                    <span class="text-gray-400 text-xs font-black uppercase tracking-[0.3em] mt-3 group-hover:text-purple-600 transition-colors">
-                        Uherské Hradiště
-                    </span>
-                </div>
-            </a>
-        </div>
-    </div>
-</footer>
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
 
-    <a href="#home" class="back-to-top">
-        <span class="arrow-up"></span>
-    </a>
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+        gsap.ticker.lagSmoothing(0, 0);
 
+        const cursorWrapper = document.querySelector('.cursor-wrapper');
+        const allCursorDots = document.querySelectorAll('.cursor-dot');
+        const hoverTriggers = document.querySelectorAll('a, .hover-trigger, button');
+
+        if (window.innerWidth > 768) {
+            window.addEventListener('mousemove', (e) => {
+                gsap.to(allCursorDots, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    duration: 0.5,
+                    stagger: 0.04,
+                    ease: "power2.out"
+                });
+            });
+
+            hoverTriggers.forEach(trigger => {
+                trigger.addEventListener('mouseenter', () => cursorWrapper.classList.add('hover-active'));
+                trigger.addEventListener('mouseleave', () => cursorWrapper.classList.remove('hover-active'));
+            });
+        }
+
+        const cards = document.querySelectorAll('.job-item');
+
+        if (window.innerWidth > 768) {
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+
+                    gsap.to(card, {
+                        rotateX: rotateX,
+                        rotateY: rotateY,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        rotateX: 0,
+                        rotateY: 0,
+                        duration: 0.7,
+                        ease: "elastic.out(1, 0.5)"
+                    });
+                });
+            });
+        }
+
+        const tl = gsap.timeline();
+        tl.to('.hero-text-line', { y: 0, duration: 1.4, stagger: 0.15, ease: expoOut, delay: 0.3 })
+            .to('.hero-subtitle', { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.8")
+            .to('.hero-image', { opacity: 1, duration: 1.8, ease: expoOut }, "-=1.2");
+
+        gsap.utils.toArray('.reveal-up').forEach(elem => {
+            gsap.to(elem, {
+                scrollTrigger: { trigger: elem, start: "top 88%", toggleActions: "play none none reverse" },
+                y: 0, opacity: 1, duration: 1.2, ease: expoOut
+            });
+        });
+
+        gsap.utils.toArray('.reveal-scale').forEach(elem => {
+            gsap.to(elem, {
+                scrollTrigger: { trigger: elem, start: "top 88%", toggleActions: "play none none reverse" },
+                scale: 1, opacity: 1, duration: 1.2, ease: expoOut
+            });
+        });
+
+        const nameFill = document.getElementById('name-fill');
+        const navbar = document.querySelector('nav');
+        const progressBar = document.getElementById('scroll-progress');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+
+            nameFill.style.backgroundPosition = `${100 - scrolled}% 0`;
+
+            if (currentScroll <= 50) {
+                navbar.classList.remove('bg-[#070314]/95', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
+                navbar.classList.add('bg-[#070314]/70');
+            } else {
+                navbar.classList.add('bg-[#070314]/95', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
+                navbar.classList.remove('bg-[#070314]/70');
+            }
+        });
+
+        gsap.to('.animate-pulse-slow', {
+            scale: 1.2, opacity: 0.15, duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut"
+        });
+    </script>
 </body>
 
-
 </html>
-
