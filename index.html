@@ -301,6 +301,43 @@
                     </p>
                 </div>
             </div>
+
+            <div class="max-w-7xl mx-auto mt-8 reveal-up">
+                <div class="p-10 md:p-14 bg-[#11071F] border-2 border-purple-800 rounded-[2rem] relative overflow-hidden shadow-2xl hover-trigger transition-all duration-500 hover:border-purple-600 group">
+                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-purple-600/15 rounded-full blur-[100px] pointer-events-none group-hover:bg-purple-500/25 transition-colors duration-700"></div>
+                    <div class="absolute -right-10 top-10 w-40 h-40 bg-pink-500/10 rounded-full blur-[70px] pointer-events-none"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center relative z-10">
+                        <div class="md:col-span-5 relative">
+                            <div class="absolute inset-0 bg-purple-500/10 blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative aspect-[4/3] rounded-2xl overflow-hidden border-4 border-purple-900 group-hover:border-purple-500/60 transition-colors shadow-lg shadow-black/30">
+                                <img src="videomapping.jpg" alt="Lukáš Vojtěšek Tým Videomapping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-expo-out" onerror="this.src='https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1000&auto=format&fit=crop';">
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-7 flex flex-col justify-center">
+                            <div class="inline-flex items-center gap-2 border border-purple-700 rounded-full px-4 py-2 bg-purple-950/40 backdrop-blur-sm self-start mb-6">
+                                <span class="bebas text-lg text-purple-300">Úspěch</span>
+                                <div class="w-1 h-1 bg-purple-500 rounded-full"></div>
+                                <span class="bebas text-lg text-purple-300">Vedení Týmu</span>
+                            </div>
+
+                            <h3 class="bebas text-5xl md:text-6xl uppercase tracking-tight text-white mb-6">Meziškolní<br><span class="grad-text">Videomapping</span></h3>
+
+                            <p class="text-purple-100 text-lg md:text-xl leading-relaxed mb-8 font-light max-w-2xl">
+                                Měl jsem tu čest vést tým v každoroční soutěži mezi třemi školami. Byla to obrovská kreativní i technická výzva, která vyžadovala perfektní organizaci a synchronizaci všech prvků. I přes silnou konkurenci jsme se umístili na <strong class="text-white font-semibold">skvělém třetím místě</strong>.
+                            </p>
+
+                            <div class="flex flex-wrap gap-3">
+                                <span class="dark-tag">Team Lead</span>
+                                <span class="dark-tag">Creative Direction</span>
+                                <span class="dark-tag">Synchronizace</span>
+                                <span class="dark-tag border-pink-600 text-pink-400 bg-pink-950/20">3. Místo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="experience" class="py-32 px-6 md:px-12 bg-[#090314] relative border-t-4 border-purple-600 rounded-t-[3rem] -mt-8 z-20">
@@ -569,14 +606,14 @@
 
         gsap.utils.toArray('.reveal-up').forEach(elem => {
             gsap.to(elem, {
-                scrollTrigger: { trigger: elem, start: "top 98%", toggleActions: "play none none reverse" },
+                scrollTrigger: { trigger: elem, start: "top 88%", toggleActions: "play none none reverse" },
                 y: 0, opacity: 1, duration: 1.2, ease: expoOut 
             });
         });
 
         gsap.utils.toArray('.reveal-scale').forEach(elem => {
             gsap.to(elem, {
-                scrollTrigger: { trigger: elem, start: "top 98%", toggleActions: "play none none reverse" },
+                scrollTrigger: { trigger: elem, start: "top 88%", toggleActions: "play none none reverse" },
                 scale: 1, opacity: 1, duration: 1.2, ease: expoOut
             });
         });
