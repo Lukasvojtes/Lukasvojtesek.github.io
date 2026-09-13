@@ -24,14 +24,69 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #faf8ff;
-            color: #0b0b0b;
+            background-color: transparent; /* Nyní řídí pozadí Liquid Glass */
+            color: #ffffff; /* Vše do dark modu kvůli pozadí */
             overflow-x: hidden;
         }
 
         ::selection { background: #a855f7; color: #ffffff; }
         ::-moz-selection { background: #a855f7; color: #ffffff; }
 
+        /* LIQUID GLASS POZADÍ (iOS VIBE) */
+        .liquid-bg-container {
+            position: fixed;
+            inset: 0;
+            z-index: -4;
+            background-color: #07020f;
+            overflow: hidden;
+        }
+        
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.65;
+            animation: liquidFloat 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .blob-1 {
+            width: 80vw; height: 80vw;
+            background: #9333ea; /* Fialová */
+            top: -20%; left: -20%;
+        }
+        
+        .blob-2 {
+            width: 70vw; height: 70vw;
+            background: #ec4899; /* Růžová */
+            bottom: -20%; right: -20%;
+            animation-delay: -5s;
+        }
+        
+        .blob-3 {
+            width: 60vw; height: 60vw;
+            background: #4f46e5; /* Indigo */
+            top: 20%; left: 30%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes liquidFloat {
+            0% { transform: scale(1) translate(0, 0); }
+            33% { transform: scale(1.1) translate(5%, 8%); }
+            66% { transform: scale(0.9) translate(-5%, -5%); }
+            100% { transform: scale(1.05) translate(-10%, 5%); }
+        }
+        
+        .liquid-glass-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            /* Tento filtr tvoří to typické Apple rozostřené sklo */
+            backdrop-filter: blur(80px) saturate(150%);
+            -webkit-backdrop-filter: blur(80px) saturate(150%);
+            background: rgba(7, 2, 15, 0.3); 
+        }
+
+        /* Tichý grid jen pro lehkou texturu přes sklo */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -53,9 +108,8 @@
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
         }
 
-        /* STÁLÝ KURZOR BEZ EFEKTŮ PŘI NAJETÍ */
-        .cursor-main { width: 16px; height: 16px; z-index: 2; } 
-        .cursor-trail { width: 6px; height: 6px; opacity: 0.4; z-index: 1; }
+        .cursor-main { width: 16px; height: 16px; z-index: 2; background: #fff;} 
+        .cursor-trail { width: 6px; height: 6px; opacity: 0.6; z-index: 1; }
 
         @media (max-width: 768px) {
             .cursor-wrapper { display: none; }
@@ -67,7 +121,7 @@
         }
 
         .grad-text {
-            background: linear-gradient(90deg, #9333ea, #4f46e5, #db2777);
+            background: linear-gradient(90deg, #c084fc, #818cf8, #f472b6);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -76,7 +130,7 @@
         @keyframes shine { to { background-position: 200% center; } }
 
         #name-fill {
-            background: linear-gradient(to right, #a855f7 50%, #ffffff 50%);
+            background: linear-gradient(to right, #d8b4fe 50%, #ffffff 50%);
             background-size: 200% 100%;
             background-position: 100% 0;
             -webkit-background-clip: text;
@@ -85,13 +139,13 @@
 
         .tech-tag-dark {
             display: inline-block; padding: 0.6rem 1.5rem; border: 1px solid rgba(255, 255, 255, 0.2); 
-            background: rgba(0,0,0,0.2); color: #ffffff; font-family: 'Bebas Neue', sans-serif;
+            background: rgba(0,0,0,0.3); color: #ffffff; font-family: 'Bebas Neue', sans-serif;
             font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
         }
         .tech-tag-dark:hover {
-            transform: translateY(-3px) scale(1.02); background: #ffffff; color: #581c87;
-            border-color: #ffffff; box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px) scale(1.02); background: rgba(255, 255, 255, 0.1); color: #fff;
+            border-color: #a855f7; box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.5);
         }
 
         .dark-tag {
@@ -113,7 +167,6 @@
         .reveal-up { opacity: 0; transform: translateY(50px); }
         .reveal-scale { opacity: 0; transform: scale(0.92); }
 
-        /* Styly pro Karusel Brigád */
         .carousel-wrapper {
             width: 100%;
             overflow: hidden;
@@ -129,12 +182,12 @@
             display: flex;
             gap: 2rem;
             width: max-content;
-            padding: 0 1rem; /* Aby karty nebyly uplně přilepené ke kraji na mobilu */
+            padding: 0 1rem;
         }
 
         .carousel-card {
-            width: 85vw; /* Výchozí šířka na mobilu - uvidí kousek další karty */
-            max-width: 450px; /* Max šířka na desktopu */
+            width: 85vw; 
+            max-width: 450px;
             flex-shrink: 0;
             display: flex;
             flex-col;
@@ -143,33 +196,39 @@
 
         @media (min-width: 768px) {
             .carousel-track {
-                padding: 0; /* Na desktopu padding nechceme, řídí ho kontejner */
+                padding: 0; 
             }
         }
         
-        /* Skrytí posuvníku, pokud by se náhodou ukázal, ale zachování možnosti scrollovat pro no-js / fallback */
         .carousel-container-scroll {
             overflow-x: auto;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE a Edge */
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
         }
         .carousel-container-scroll::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none; 
         }
     </style>
 </head>
 
 <body>
+    <!-- ZDE JSOU VRSTVY LIQUID GLASS POZADÍ -->
+    <div class="liquid-bg-container">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
+    </div>
+    <div class="liquid-glass-overlay"></div>
+    <div class="bg-grid"></div>
+
     <div class="cursor-wrapper">
         <div class="cursor-dot cursor-main"></div>
         <div class="cursor-dot cursor-trail"></div>
         <div class="cursor-dot cursor-trail"></div>
         <div class="cursor-dot cursor-trail"></div>
     </div>
-    
-    <div class="bg-grid"></div>
 
-    <nav class="fixed w-full z-50 bg-[#070314]/70 backdrop-blur-xl px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-500 ease-out border-b border-purple-500/20" id="navbar">
+    <nav class="fixed w-full z-50 bg-[#070314]/50 backdrop-blur-xl px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-500 ease-out border-b border-purple-500/10" id="navbar">
         <a href="#home" class="hover-trigger bebas text-3xl tracking-tight uppercase group flex items-center">
             <span id="name-fill">LUKÁŠ VOJTĚŠEK</span>
             <span class="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-1">_</span>
@@ -188,16 +247,21 @@
                 <span class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Kontakt</span>
             </a>
         </div>
-        <div class="absolute bottom-0 left-0 h-[3px] bg-purple-500 w-0 transition-none shadow-[0_0_10px_rgba(168,85,247,0.8)]" id="scroll-progress"></div>
+        <div class="absolute bottom-0 left-0 h-[2px] bg-purple-500 w-0 transition-none shadow-[0_0_15px_rgba(168,85,247,0.8)]" id="scroll-progress"></div>
     </nav>
 
     <main>
         <section id="home" class="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-12 pt-24 overflow-hidden">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] bg-purple-600/10 blur-[120px] rounded-full z-[-1] animate-pulse-slow"></div>
+            <!-- Původní glow ponechán, sjednotí se s tekutým pozadím -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] bg-purple-500/10 blur-[120px] rounded-full z-[-1] animate-pulse-slow"></div>
             
             <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-8 z-10">
                     <h1 class="hero-title bebas text-[16vw] sm:text-[14vw] md:text-[12vw] lg:text-[8vw] leading-[0.85] uppercase mb-6 tracking-tight">
+                        <!-- PŘIDÁNO Bc. -->
+                        <div class="overflow-hidden relative pb-1 pr-6 -mr-6">
+                            <span class="block translate-y-[110%] hero-text-line text-3xl md:text-5xl text-purple-400 tracking-[0.2em] mb-2 font-['Inter'] font-black">Bc.</span>
+                        </div>
                         <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
                             <span class="block translate-y-[110%] hero-text-line pr-2">Lukáš</span>
                         </div>
@@ -206,70 +270,68 @@
                         </div>
                     </h1>
                     <div class="hero-subtitle opacity-0">
-                        <p class="text-purple-600 text-2xl md:text-4xl font-black uppercase tracking-widest leading-none mb-6">
+                        <p class="text-purple-400 text-2xl md:text-4xl font-black uppercase tracking-widest leading-none mb-6">
                             Ready for new chapter?
                         </p>
-                        <p class="text-gray-900 text-xl md:text-2xl font-normal uppercase tracking-wide leading-none mb-4">
+                        <p class="text-gray-200 text-xl md:text-2xl font-normal uppercase tracking-wide leading-none mb-4">
                             Propojuji technické obory, IT a efektivní procesy
                         </p>
-                        <p class="text-purple-600 text-sm md:text-base uppercase font-bold tracking-[0.2em]">
+                        <p class="text-purple-400 text-sm md:text-base uppercase font-bold tracking-[0.2em]">
                             Fakulta aplikované informatiky | UTB Zlín
                         </p>
                     </div>
                 </div>
 
                 <div class="lg:col-span-4 relative hero-image opacity-0 md:translate-x-8 lg:translate-x-0 mt-12 lg:mt-0">
-                    <div class="relative z-10 w-full md:w-3/4 lg:w-full aspect-[4/5] overflow-hidden rounded-2xl group border-[6px] border-purple-200 shadow-[20px_20px_0px_0px_rgba(168,85,247,0.3)] hover:shadow-[10px_10px_0px_0px_rgba(168,85,247,0.6)] hover:translate-x-2 hover:translate-y-2 transition-all duration-500 mx-auto">
-                        <img src="fotka.jpeg" alt="Lukáš Vojtěšek" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 ease-expo-out">
+                    <div class="relative z-10 w-full md:w-3/4 lg:w-full aspect-[4/5] overflow-hidden rounded-2xl group border-4 border-purple-500/30 shadow-[0_20px_50px_rgba(168,85,247,0.2)] hover:shadow-[0_20px_80px_rgba(168,85,247,0.4)] hover:translate-x-2 hover:translate-y-2 transition-all duration-500 mx-auto">
+                        <img src="fotka.jpeg" alt="Lukáš Vojtěšek" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 ease-expo-out mix-blend-luminosity opacity-90 group-hover:mix-blend-normal group-hover:opacity-100">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Původní světlé sekce ponechány -->
+        <!-- Upraveny karty na Glassmorphism kvůli Liquid pozadí -->
         <section class="py-32 px-6 md:px-12 relative z-10">
             <div class="max-w-7xl mx-auto">
-                <h2 class="reveal-up bebas text-5xl md:text-7xl mb-16 uppercase text-black">Akademická <span class="text-purple-600">Cesta</span></h2>
+                <h2 class="reveal-up bebas text-5xl md:text-7xl mb-16 uppercase text-white">Akademická <span class="text-purple-400">Cesta</span></h2>
                 
                 <div class="space-y-6">
-                    <!-- Navazující studium přidáno -->
-                    <div class="reveal-up group bg-white border-2 border-purple-300 hover:border-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.25)] transition-all duration-500 hover-trigger">
+                    <div class="reveal-up group bg-white/5 border border-purple-500/30 hover:border-purple-400/80 backdrop-blur-md rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.3)] transition-all duration-500 hover-trigger">
                         <div>
-                            <span class="text-purple-600 bg-purple-100 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block">2026 - Současnost</span>
+                            <span class="text-purple-300 bg-purple-900/40 border border-purple-500/30 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block">2026 - Současnost</span>
                             <a href="https://www.utb.cz" target="_blank" class="block">
-                                <h3 class="bebas text-4xl md:text-5xl uppercase group-hover:text-purple-700 transition-colors">Univerzita Tomáše Bati ve Zlíně</h3>
+                                <h3 class="bebas text-4xl md:text-5xl uppercase text-white group-hover:text-purple-300 transition-colors">Univerzita Tomáše Bati ve Zlíně</h3>
                             </a>
-                            <a href="https://www.utb.cz" target="_blank" class="text-purple-500 hover:text-purple-700 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.utb.cz</a>
+                            <a href="https://www.utb.cz" target="_blank" class="text-purple-400 hover:text-purple-300 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.utb.cz</a>
                         </div>
                         <div class="mt-4 md:mt-0 md:text-right">
-                            <p class="font-bold text-lg md:text-xl text-gray-900">Bezpečnostní management (Ing.)</p>
-                            <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Fakulta aplikované informatiky</p>
+                            <p class="font-bold text-lg md:text-xl text-gray-200">Bezpečnostní management (Ing.)</p>
+                            <p class="text-gray-400 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Fakulta aplikované informatiky</p>
                         </div>
                     </div>
 
-                    <div class="reveal-up group bg-white border-2 border-purple-200 hover:border-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.25)] transition-all duration-500 hover-trigger">
+                    <div class="reveal-up group bg-white/5 border border-white/10 hover:border-purple-400/60 backdrop-blur-md rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.2)] transition-all duration-500 hover-trigger">
                         <div>
-                            <span class="text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block group-hover:bg-purple-100 group-hover:text-purple-600 transition-colors">2023 - 2026</span>
+                            <span class="text-gray-300 bg-white/10 border border-white/10 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block group-hover:bg-purple-900/40 group-hover:text-purple-300 group-hover:border-purple-500/30 transition-colors">2023 - 2026</span>
                             <a href="https://www.utb.cz" target="_blank" class="block">
-                                <h3 class="bebas text-4xl md:text-5xl uppercase group-hover:text-purple-700 transition-colors text-gray-400">Univerzita Tomáše Bati ve Zlíně</h3>
+                                <h3 class="bebas text-4xl md:text-5xl uppercase text-gray-300 group-hover:text-white transition-colors">Univerzita Tomáše Bati ve Zlíně</h3>
                             </a>
                         </div>
-                        <div class="mt-4 md:mt-0 md:text-right opacity-80">
-                            <p class="font-bold text-lg md:text-xl text-gray-900">Informační technologie v administrativě (Bc.)</p>
-                            <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Bakalářské studium</p>
+                        <div class="mt-4 md:mt-0 md:text-right">
+                            <p class="font-bold text-lg md:text-xl text-gray-200">Informační technologie v administrativě (Bc.)</p>
+                            <p class="text-gray-400 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Bakalářské studium</p>
                         </div>
                     </div>
 
-                    <div class="reveal-up group bg-white border-2 border-purple-200 hover:border-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.25)] transition-all duration-500 hover-trigger">
+                    <div class="reveal-up group bg-white/5 border border-white/10 hover:border-white/30 backdrop-blur-md rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center transition-all duration-500 hover-trigger opacity-80 hover:opacity-100">
                         <div>
-                            <span class="text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block group-hover:bg-purple-100 group-hover:text-purple-600 transition-colors">2019 - 2023</span>
+                            <span class="text-gray-400 bg-white/5 border border-white/5 px-3 py-1 rounded-full font-bold uppercase tracking-widest text-xs mb-4 inline-block transition-colors">2019 - 2023</span>
                             <a href="https://www.spsoa-ub.cz" target="_blank" class="block">
-                                <h3 class="bebas text-4xl md:text-5xl uppercase group-hover:text-purple-700 transition-colors text-gray-400">SPŠ a OA Uherský Brod</h3>
+                                <h3 class="bebas text-4xl md:text-5xl uppercase text-gray-400 group-hover:text-gray-200 transition-colors">SPŠ a OA Uherský Brod</h3>
                             </a>
-                            <a href="https://www.spsoa-ub.cz" target="_blank" class="text-gray-400 hover:text-purple-600 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.spsoa-ub.cz</a>
                         </div>
-                        <div class="mt-4 md:mt-0 md:text-right opacity-80">
-                            <p class="font-bold text-lg md:text-xl text-gray-900">Strojírenství - Metrologie</p>
+                        <div class="mt-4 md:mt-0 md:text-right">
+                            <p class="font-bold text-lg md:text-xl text-gray-300">Strojírenství - Metrologie</p>
                             <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Maturitní zkouška</p>
                         </div>
                     </div>
@@ -277,10 +339,9 @@
             </div>
         </section>
 
-        <!-- Upravená sekce Profil (Vlastnosti) -->
         <section id="about" class="py-32 px-6 md:px-12 relative overflow-hidden">
             <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-                <div class="reveal-up lg:col-span-8 p-10 md:p-16 bg-gradient-to-br from-[#3b0764] to-[#1e1b4b] border border-purple-500/20 rounded-[2rem] flex flex-col justify-center transition-all duration-500 hover:shadow-[0_20px_80px_-20px_rgba(168,85,247,0.4)] shadow-xl relative overflow-hidden hover-trigger">
+                <div class="reveal-up lg:col-span-8 p-10 md:p-16 bg-gradient-to-br from-[#3b0764]/70 to-[#1e1b4b]/70 backdrop-blur-xl border border-purple-500/20 rounded-[2rem] flex flex-col justify-center transition-all duration-500 hover:shadow-[0_20px_80px_-20px_rgba(168,85,247,0.3)] shadow-xl relative overflow-hidden hover-trigger">
                     <div class="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/20 blur-[60px] rounded-full pointer-events-none"></div>
 
                     <h2 class="bebas text-5xl md:text-7xl mb-8 uppercase text-white relative z-10">Adaptabilita <span class="text-purple-400">&</span> Růst</h2>
@@ -307,8 +368,8 @@
                     </div>
                 </div>
                 
-                <div class="reveal-up lg:col-span-4 p-10 md:p-12 rounded-[2rem] bg-[#0a0a0a] text-white flex flex-col justify-between relative overflow-hidden group hover-trigger">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"></div>
+                <div class="reveal-up lg:col-span-4 p-10 md:p-12 rounded-[2rem] bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 text-white flex flex-col justify-between relative overflow-hidden group hover-trigger hover:border-purple-500/30 transition-colors">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"></div>
                     <div class="bebas text-2xl text-purple-400 uppercase relative z-10">Nástroje & Workflow</div>
                     <div class="relative z-10 mt-16 lg:mt-0">
                         <h3 class="bebas text-6xl md:text-7xl leading-none uppercase mb-6">AI<br><span class="text-white">Driven</span></h3>
@@ -320,10 +381,9 @@
                 </div>
             </div>
 
-            <!-- Tyto moduly ponechávám, vizuálně sedí do sekce "O mně" -->
             <div class="max-w-7xl mx-auto mt-8 reveal-up">
-                <div class="p-10 md:p-14 bg-[#1a0b2e] border-2 border-pink-500/20 rounded-[2rem] flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden shadow-xl hover-trigger transition-all duration-500 hover:border-pink-500/50 group">
-                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-pink-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-pink-500/20 transition-colors duration-700"></div>
+                <div class="p-10 md:p-14 bg-[#1a0b2e]/70 backdrop-blur-xl border border-pink-500/30 rounded-[2rem] flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden shadow-xl hover-trigger transition-all duration-500 hover:border-pink-500/60 hover:bg-[#1a0b2e]/90 group">
+                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-pink-600/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-pink-500/30 transition-colors duration-700"></div>
                     
                     <div class="flex-shrink-0 relative z-10">
                         <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-[0_10px_30px_-10px_rgba(236,72,153,0.6)]">
@@ -342,22 +402,21 @@
                 </div>
             </div>
 
-            <!-- Videomapping sekce -->
             <div class="max-w-7xl mx-auto mt-8 reveal-up">
-                <div class="p-10 md:p-14 bg-[#11071F] border-2 border-purple-800 rounded-[2rem] relative overflow-hidden shadow-2xl hover-trigger transition-all duration-500 hover:border-purple-600 group">
-                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-purple-600/15 rounded-full blur-[100px] pointer-events-none group-hover:bg-purple-500/25 transition-colors duration-700"></div>
-                    <div class="absolute -right-10 top-10 w-40 h-40 bg-pink-500/10 rounded-full blur-[70px] pointer-events-none"></div>
+                <div class="p-10 md:p-14 bg-[#11071F]/70 backdrop-blur-xl border border-purple-800 rounded-[2rem] relative overflow-hidden shadow-2xl hover-trigger transition-all duration-500 hover:border-purple-500/50 hover:bg-[#11071F]/90 group">
+                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none group-hover:bg-purple-500/30 transition-colors duration-700"></div>
+                    <div class="absolute -right-10 top-10 w-40 h-40 bg-pink-500/15 rounded-full blur-[70px] pointer-events-none"></div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center relative z-10">
                         <div class="md:col-span-5 relative">
-                            <div class="absolute inset-0 bg-purple-500/10 blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <div class="relative aspect-[4/3] rounded-2xl overflow-hidden border-4 border-purple-900 group-hover:border-purple-500/60 transition-colors shadow-lg shadow-black/30">
-                                <img src="videomapping.jpg" alt="Lukáš Vojtěšek Tým Videomapping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-expo-out" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000&auto=format&fit=crop';">
+                            <div class="absolute inset-0 bg-purple-500/20 blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative aspect-[4/3] rounded-2xl overflow-hidden border border-purple-500/30 group-hover:border-purple-400/60 transition-colors shadow-lg shadow-black/50">
+                                <img src="videomapping.jpg" alt="Lukáš Vojtěšek Tým Videomapping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-expo-out mix-blend-luminosity opacity-80 group-hover:mix-blend-normal group-hover:opacity-100" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000&auto=format&fit=crop';">
                             </div>
                         </div>
 
                         <div class="md:col-span-7 flex flex-col justify-center">
-                            <div class="inline-flex items-center gap-2 border border-purple-700 rounded-full px-4 py-2 bg-purple-950/40 backdrop-blur-sm self-start mb-6">
+                            <div class="inline-flex items-center gap-2 border border-purple-700 rounded-full px-4 py-2 bg-purple-900/40 backdrop-blur-sm self-start mb-6">
                                 <span class="bebas text-lg text-purple-300">Úspěch</span>
                                 <div class="w-1 h-1 bg-purple-500 rounded-full"></div>
                                 <span class="bebas text-lg text-purple-300">Vedení Týmu</span>
@@ -373,7 +432,7 @@
                                 <span class="dark-tag">Team Lead</span>
                                 <span class="dark-tag">Delegování úkolů</span>
                                 <span class="dark-tag">Time Management</span>
-                                <span class="dark-tag border-pink-600 text-pink-400 bg-pink-950/20">3. Místo</span>
+                                <span class="dark-tag border-pink-500/50 text-pink-300 bg-pink-900/30">3. Místo</span>
                             </div>
                         </div>
                     </div>
@@ -381,21 +440,21 @@
             </div>
         </section>
 
-        <!-- KARIÉRA S KARUSELEM -->
-        <section id="experience" class="py-32 px-0 md:px-0 bg-[#090314] relative border-t-4 border-purple-600 rounded-t-[3rem] -mt-8 z-20">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-purple-900/20 blur-[150px] rounded-full pointer-events-none"></div>
+        <!-- KARIÉRA -->
+        <section id="experience" class="py-32 px-0 md:px-0 bg-[#090314]/80 backdrop-blur-2xl relative border-t-2 border-purple-500/30 rounded-t-[3rem] z-20">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-purple-900/30 blur-[150px] rounded-full pointer-events-none"></div>
 
             <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-                <h2 class="reveal-up bebas text-6xl md:text-8xl mb-24 uppercase text-center text-white">Pracovní <span class="text-purple-500">Historie</span></h2>
+                <h2 class="reveal-up bebas text-6xl md:text-8xl mb-24 uppercase text-center text-white">Pracovní <span class="text-purple-400">Historie</span></h2>
 
-                <!-- Hlavní zkušenost Meetcloud -->
-                <div class="reveal-scale bg-[#150a24] text-white p-10 md:p-16 rounded-[3rem] mb-16 relative overflow-hidden group hover-trigger shadow-2xl shadow-black/50 border-2 border-purple-500/30 hover:border-purple-400 transition-all duration-500 max-w-5xl mx-auto">
-                    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 group-hover:bg-purple-500/40 transition-colors duration-700"></div>
+                <!-- Hlavní zkušenost -->
+                <div class="reveal-scale bg-white/5 backdrop-blur-md text-white p-10 md:p-16 rounded-[3rem] mb-16 relative overflow-hidden group hover-trigger shadow-2xl shadow-black/50 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-500 max-w-5xl mx-auto">
+                    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 group-hover:bg-purple-500/30 transition-colors duration-700 pointer-events-none"></div>
                     
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 relative z-10">
                         <div>
-                            <span class="bg-purple-600 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block shadow-lg shadow-purple-900">Aktuální pozice</span>
-                            <h3 class="bebas text-6xl md:text-8xl uppercase tracking-tight">Meetcloud</h3>
+                            <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block shadow-[0_5px_15px_rgba(168,85,247,0.4)]">Aktuální pozice</span>
+                            <h3 class="bebas text-6xl md:text-8xl uppercase tracking-tight text-white">Meetcloud</h3>
                         </div>
                         <span class="bebas text-2xl md:text-3xl text-purple-400 mt-6 md:mt-0">2026 - Současnost</span>
                     </div>
@@ -408,19 +467,21 @@
                 </div>
 
                 <div class="text-center mb-8 reveal-up">
-                    <h3 class="bebas text-3xl md:text-4xl text-gray-400 uppercase tracking-widest">Brigády a Provozní Praxe</h3>
-                    <p class="text-purple-500/60 text-sm mt-2 font-bold uppercase tracking-widest">Tažením (Swipe) zobrazte další</p>
+                    <h3 class="bebas text-3xl md:text-4xl text-gray-300 uppercase tracking-widest">Brigády a Provozní Praxe</h3>
+                    <p class="text-purple-400/80 text-sm mt-2 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 animate-bounce-x" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                        Tažením posuňte
+                    </p>
                 </div>
             </div>
 
-            <!-- KARUSEL BRIGÁD -->
+            <!-- KARUSEL -->
             <div class="carousel-wrapper reveal-up" id="carousel-wrapper">
                 <div class="carousel-container-scroll max-w-[1400px] mx-auto px-6 md:px-12">
                     <div class="carousel-track" id="carousel-track">
                         
-                        <!-- Karta 1 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/20 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-purple-500/20 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
@@ -429,87 +490,82 @@
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-white">Orkla Foods</h4>
                                     <p class="text-xs font-bold uppercase tracking-widest text-purple-300 mb-4">Logistika & Provoz</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Dlouhodobá praxe v provozu s více než <strong class="text-white">1200+ odpracovanými hodinami</strong>. Z původní pozice smluvního vychystávače jsem postupně přebral zodpovědnost za relokaci menších skladových úseků a asistoval při koordinaci interní logistiky.</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Dlouhodobá praxe v provozu s více než <strong class="text-white">1200+ odpracovanými hodinami</strong>. Z původní pozice smluvního vychystávače jsem postupně přebral zodpovědnost za relokaci menších skladových úseků a asistoval při koordinaci interní logistiky.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Karta 2 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
-                                        <span class="bebas text-2xl text-gray-500 group-hover:text-purple-400 transition-colors">2023</span>
-                                        <div class="w-2 h-2 bg-gray-600 rounded-full group-hover:bg-purple-500 transition-all"></div>
+                                        <span class="bebas text-2xl text-gray-400 group-hover:text-purple-400 transition-colors">2023</span>
+                                        <div class="w-2 h-2 bg-gray-500 rounded-full group-hover:bg-purple-500 transition-all"></div>
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">Solar Global</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">Projektová asistence</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Spolupráce na přípravě technické dokumentace pro solární elektrárny, úpravy výkresů v AutoCADu a zajišťování plynulé komunikace informací směrem k realizačnímu týmu.</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-purple-300 mb-4 transition-colors">Projektová asistence</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Spolupráce na přípravě technické dokumentace pro solární elektrárny, úpravy výkresů v AutoCADu a zajišťování plynulé komunikace informací směrem k realizačnímu týmu.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Karta 3 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
-                                        <span class="bebas text-2xl text-gray-500 group-hover:text-purple-400 transition-colors">2022</span>
-                                        <div class="w-2 h-2 bg-gray-600 rounded-full group-hover:bg-purple-500 transition-all"></div>
+                                        <span class="bebas text-2xl text-gray-400 group-hover:text-purple-400 transition-colors">2022</span>
+                                        <div class="w-2 h-2 bg-gray-500 rounded-full group-hover:bg-purple-500 transition-all"></div>
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">MESIT Holding</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">Analýza kvality & Reporty</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Provádění kontrolních procesů ve výrobě, zpracování dat z měření a předávání reportů vedení kvality pro další optimalizaci.</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-purple-300 mb-4 transition-colors">Analýza kvality & Reporty</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Provádění kontrolních procesů ve výrobě, zpracování dat z měření a předávání reportů vedení kvality pro další optimalizaci.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Karta 4 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
-                                        <span class="bebas text-2xl text-gray-500 group-hover:text-purple-400 transition-colors">2021</span>
-                                        <div class="w-2 h-2 bg-gray-600 rounded-full group-hover:bg-purple-500 transition-all"></div>
+                                        <span class="bebas text-2xl text-gray-400 group-hover:text-purple-400 transition-colors">2021</span>
+                                        <div class="w-2 h-2 bg-gray-500 rounded-full group-hover:bg-purple-500 transition-all"></div>
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">PRIMA BILAVČÍK</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">Laboratorní technik</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Práce s přesnými metrologickými daty, dodržování striktních postupů a podílení se na zajištění jakosti produktů.</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-purple-300 mb-4 transition-colors">Laboratorní technik</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Práce s přesnými metrologickými daty, dodržování striktních postupů a podílení se na zajištění jakosti produktů.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Karta 5 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
-                                        <span class="bebas text-2xl text-gray-500 group-hover:text-purple-400 transition-colors">2020</span>
-                                        <div class="w-2 h-2 bg-gray-600 rounded-full group-hover:bg-purple-500 transition-all"></div>
+                                        <span class="bebas text-2xl text-gray-400 group-hover:text-purple-400 transition-colors">2020</span>
+                                        <div class="w-2 h-2 bg-gray-500 rounded-full group-hover:bg-purple-500 transition-all"></div>
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">DFK Cab</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">Expedice & Zabezpečení</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Samostatná příprava a organizace zakázek pro export. Zodpovědnost za kompletaci a kontrolu zásilek před odesláním ke klientovi.</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-purple-300 mb-4 transition-colors">Expedice & Zabezpečení</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Samostatná příprava a organizace zakázek pro export. Zodpovědnost za kompletaci a kontrolu zásilek před odesláním ke klientovi.</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Karta 6 -->
                         <div class="carousel-card job-card-container">
-                            <div class="job-item p-8 h-full rounded-3xl bg-[#0f071a] border border-purple-500/10 hover:border-purple-500/40 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
+                            <div class="job-item p-8 h-full rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 hover:bg-white/10 flex flex-col justify-between cursor-default hover-trigger group shadow-xl transition-colors">
                                 <div class="card-glow"></div>
                                 <div class="job-content">
                                     <div class="flex justify-between items-start mb-6">
-                                        <span class="bebas text-2xl text-gray-500 group-hover:text-purple-400 transition-colors">2018 - 2020</span>
-                                        <div class="w-2 h-2 bg-gray-600 rounded-full group-hover:bg-purple-500 transition-all"></div>
+                                        <span class="bebas text-2xl text-gray-400 group-hover:text-purple-400 transition-colors">2018 - 2020</span>
+                                        <div class="w-2 h-2 bg-gray-500 rounded-full group-hover:bg-purple-500 transition-all"></div>
                                     </div>
                                     <h4 class="bebas text-3xl uppercase mb-2 text-gray-200 group-hover:text-white transition-colors">Aircraft & Hanon</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-400 mb-4 transition-colors">Provozní výpomoc</p>
-                                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Získání základních návyků v těžkém i lehkém průmyslu. Pochopení bezpečnostních standardů a fungování velkých výrobních celků.</p>
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-purple-300 mb-4 transition-colors">Provozní výpomoc</p>
+                                    <p class="text-gray-300 text-sm leading-relaxed mb-6 font-light">Získání základních návyků v těžkém i lehkém průmyslu. Pochopení bezpečnostních standardů a fungování velkých výrobních celků.</p>
                                 </div>
                             </div>
                         </div>
@@ -517,24 +573,23 @@
                     </div>
                 </div>
             </div>
-            <!-- KONEC KARUSELU -->
-             
         </section>
 
-        <footer id="contact" class="py-32 px-6 md:px-12 bg-[#05010a] text-white rounded-t-[4rem] -mt-10 overflow-hidden relative border-t-2 border-purple-900 z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
-            <div class="absolute bottom-0 left-0 w-[800px] h-[800px] bg-purple-600/20 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
+        <!-- FOOTER: ZMĚNĚNO NA "na výzvu." -->
+        <footer id="contact" class="py-32 px-6 md:px-12 bg-[#05010a]/80 backdrop-blur-2xl text-white rounded-t-[4rem] -mt-10 overflow-hidden relative border-t border-purple-500/20 z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
+            <div class="absolute bottom-0 left-0 w-[800px] h-[800px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
             
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center lg:items-end gap-20 relative z-10">
                 <div class="text-center lg:text-left">
                     <h2 class="reveal-up bebas text-[16vw] lg:text-[11vw] uppercase leading-[0.8] mb-8 tracking-tight">
                         <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line pr-2">Připraven</span>
+                            <span class="block translate-y-[110%] hero-text-line pr-2 text-white">Připraven</span>
                         </div>
                         <div class="overflow-hidden relative mt-2 pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">na projekt.&nbsp;</span>
+                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">na výzvu.&nbsp;</span>
                         </div>
                     </h2>
-                    <div class="inline-flex items-center border border-purple-500/30 rounded-full px-6 py-3 bg-purple-900/20 backdrop-blur-md">
+                    <div class="inline-flex items-center border border-purple-500/30 rounded-full px-6 py-3 bg-purple-900/30 backdrop-blur-md">
                         <span class="relative flex h-3 w-3 mr-3">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -546,22 +601,32 @@
                 </div>
 
                 <div class="flex flex-col space-y-6 w-full lg:w-auto">
-                    <a href="mailto:l_vojtesek@utb.cz" class="hover-trigger group block bg-white/5 hover:bg-purple-600/20 border border-purple-500/20 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
-                        <span class="block bebas text-3xl md:text-5xl group-hover:text-white transition-colors">l_vojtesek@utb.cz</span>
-                        <span class="block text-xs uppercase tracking-widest text-gray-500 group-hover:text-purple-300 mt-2">Univerzitní email</span>
+                    <a href="mailto:l_vojtesek@utb.cz" class="hover-trigger group block bg-white/5 hover:bg-white/10 backdrop-blur-md border border-purple-500/20 hover:border-purple-500/50 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
+                        <span class="block bebas text-3xl md:text-5xl text-gray-200 group-hover:text-white transition-colors">l_vojtesek@utb.cz</span>
+                        <span class="block text-xs uppercase tracking-widest text-purple-400/60 group-hover:text-purple-300 mt-2">Univerzitní email</span>
                     </a>
-                    <a href="mailto:lukas.vojtesek04@gmail.com" class="hover-trigger group block bg-white/5 hover:bg-purple-600/20 border border-purple-500/20 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
-                        <span class="block bebas text-3xl md:text-5xl group-hover:text-white transition-colors">lukas.vojtesek04@gmail.com</span>
-                        <span class="block text-xs uppercase tracking-widest text-gray-500 group-hover:text-purple-300 mt-2">Osobní email</span>
+                    <a href="mailto:lukas.vojtesek04@gmail.com" class="hover-trigger group block bg-white/5 hover:bg-white/10 backdrop-blur-md border border-purple-500/20 hover:border-purple-500/50 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
+                        <span class="block bebas text-3xl md:text-5xl text-gray-200 group-hover:text-white transition-colors">lukas.vojtesek04@gmail.com</span>
+                        <span class="block text-xs uppercase tracking-widest text-purple-400/60 group-hover:text-purple-300 mt-2">Osobní email</span>
                     </a>
                 </div>
             </div>
-             <div class="max-w-7xl mx-auto mt-32 pt-8 border-t border-purple-900/50 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm uppercase tracking-wider">
+             <div class="max-w-7xl mx-auto mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm uppercase tracking-wider">
                 <p>2026 Lukáš Vojtěšek</p>
-                
             </div>
         </footer>
     </main>
+
+    <style>
+        /* CSS Animace pro výzvu k tažení v Karuselu */
+        @keyframes bounce-x {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+        .animate-bounce-x {
+            animation: bounce-x 1.5s infinite;
+        }
+    </style>
 
     <script>
         gsap.registerPlugin(ScrollTrigger, Draggable);
@@ -615,7 +680,7 @@
 
                     const centerX = rect.width / 2;
                     const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -3; // Zmírněno pro menší karty v karuselu
+                    const rotateX = ((y - centerY) / centerY) * -3; 
                     const rotateY = ((x - centerX) / centerX) * 3;
 
                     gsap.to(card, {
@@ -671,23 +736,22 @@
             nameFill.style.backgroundPosition = `${100 - scrolled}% 0`;
 
             if (currentScroll <= 50) {
-                 navbar.classList.remove('bg-[#070314]/95', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
-                 navbar.classList.add('bg-[#070314]/70');
+                 navbar.classList.remove('bg-[#070314]/90', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
+                 navbar.classList.add('bg-[#070314]/50');
             } else {
-                 navbar.classList.add('bg-[#070314]/95', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
-                 navbar.classList.remove('bg-[#070314]/70');
+                 navbar.classList.add('bg-[#070314]/90', 'shadow-[0_10px_30px_rgba(168,85,247,0.15)]');
+                 navbar.classList.remove('bg-[#070314]/50');
             }
         });
 
         gsap.to('.animate-pulse-slow', {
-            scale: 1.2, opacity: 0.15, duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut"
+            scale: 1.2, opacity: 0.25, duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut"
         });
 
         // GSAP Draggable Karusel
         const track = document.getElementById("carousel-track");
         
         if (track && window.innerWidth > 768) {
-             // Aktivace Draggable pouze na desktopu, na mobilu necháme nativní horizontální scroll přes overflow-x: auto (je to plynulejší)
              Draggable.create(track, {
                 type: "x",
                 bounds: document.getElementById("carousel-wrapper"),
