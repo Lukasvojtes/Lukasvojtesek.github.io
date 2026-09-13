@@ -4,448 +4,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bc. Lukáš Vojtěšek | Portfolio</title>
+    <title>Bc. Lukáš Vojtěšek | Profil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
+        /* Apple HIG CSS Reset & Lenis */
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
         .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
         .lenis.lenis-stopped { overflow: hidden; }
-        
-        @media (min-width: 769px) {
-            * { cursor: none !important; }
+
+        :root {
+            --bg-color: #000000;
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --accent-purple: #bf5af2; /* iOS System Purple */
+            --border-subtle: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(28, 28, 30, 0.5);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #05010a;
-            color: #ffffff;
+            /* Nativní Apple San Francisco font (nebo nejlepší ekvivalent) */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            letter-spacing: -0.015em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
         }
 
-        ::selection { background: #a855f7; color: #ffffff; }
-        ::-moz-selection { background: #a855f7; color: #ffffff; }
+        ::selection { background: var(--accent-purple); color: #ffffff; }
+        ::-moz-selection { background: var(--accent-purple); color: #ffffff; }
 
-        /* Čisté pozadí bez šumu */
-        .bg-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: -2;
-            background-image: 
-                linear-gradient(to right, rgba(168, 85, 247, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
-            background-size: 50px 50px;
+        /* Typografie - Apple styl */
+        h1, h2, h3, h4, h5 {
+            font-weight: 700;
+            letter-spacing: -0.03em;
         }
 
-        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; }
+        .text-gradient-apple {
+            background: linear-gradient(180deg, #ffffff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Apple "Liquid Glass" materiál */
+        .liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 0.5px solid var(--border-subtle);
+            border-radius: 28px;
+        }
         
-        .cursor-dot {
-            position: absolute; top: 0; left: 0; background: #a855f7; 
-            border-radius: 50%; transform: translate(-50%, -50%); transition: opacity 0.3s;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+        .nav-glass {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 0.5px solid var(--border-subtle);
         }
 
-        .cursor-main { width: 12px; height: 12px; z-index: 2; background: #fff; } 
-        .cursor-trail { width: 6px; height: 6px; opacity: 0.5; z-index: 1; }
-
-        @media (max-width: 768px) { .cursor-wrapper { display: none; } }
-
-        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
-
-        .grad-text {
-            background: linear-gradient(90deg, #c084fc, #818cf8, #f472b6);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 5s linear infinite;
+        /* Jemné animace - Apple styl preferuje zmenšení při dotyku (active) spíše než vznášení (hover) */
+        .apple-btn {
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        @keyframes shine { to { background-position: 200% center; } }
-
-        #name-fill {
-            background: linear-gradient(to right, #d8b4fe 50%, #ffffff 50%);
-            background-size: 200% 100%;
-            background-position: 100% 0;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .apple-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .apple-btn:active {
+            transform: scale(0.97);
+            opacity: 0.8;
         }
 
-        .tech-tag-dark {
-            display: inline-block; padding: 0.6rem 1.5rem; border: 1px solid rgba(168, 85, 247, 0.3); 
-            background: rgba(168, 85, 247, 0.05); color: #e9d5ff; font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-        }
-        .tech-tag-dark:hover {
-            transform: translateY(-3px) scale(1.05); background: rgba(168, 85, 247, 0.2); color: #ffffff;
-            border-color: #a855f7; box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.5);
-        }
-
-        .dark-tag {
-            display: inline-block; padding: 0.4rem 1rem; background: rgba(255,255,255,0.05); color: #cbd5e1;
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
-            border-radius: 9999px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s;
-        }
-        .dark-tag:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-        .job-card-container { perspective: 1500px; }
-        .job-item { transform-style: preserve-3d; position: relative; }
-        .card-glow {
-            position: absolute; inset: 0; border-radius: inherit;
-            background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(168, 85, 247, 0.12), transparent 40%);
-            opacity: 0; transition: opacity 0.5s; pointer-events: none; z-index: 0;
-        }
-        .job-item:hover .card-glow { opacity: 1; }
-        .job-content { position: relative; z-index: 10; transform: translateZ(20px); }
-
-        .reveal-up { opacity: 0; transform: translateY(50px); }
-        .reveal-scale { opacity: 0; transform: scale(0.92); }
-
-        .glass-card {
-            background: rgba(15, 7, 26, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(168, 85, 247, 0.15);
+        /* Odznaky - iOS style pills */
+        .ios-pill {
+            background: rgba(191, 90, 242, 0.15);
+            color: var(--accent-purple);
+            border: 0.5px solid rgba(191, 90, 242, 0.3);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            border-radius: 999px;
+            padding: 6px 14px;
         }
 
-        /* Akordeon transition */
+        .ios-pill-gray {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 999px;
+            padding: 6px 14px;
+        }
+
+        /* iOS List View */
+        .ios-list-item {
+            border-bottom: 0.5px solid var(--border-subtle);
+        }
+        .ios-list-item:last-child {
+            border-bottom: none;
+        }
+
         .accordion-content {
-            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
         }
+
+        .reveal-up { opacity: 0; transform: translateY(40px); }
     </style>
 </head>
 
 <body>
-    <div class="cursor-wrapper">
-        <div class="cursor-dot cursor-main"></div>
-        <div class="cursor-dot cursor-trail"></div>
-        <div class="cursor-dot cursor-trail"></div>
-        <div class="cursor-dot cursor-trail"></div>
-    </div>
-    
-    <div class="bg-grid"></div>
-
-    <nav class="fixed w-full z-50 bg-[#05010a]/60 backdrop-blur-xl px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-500 ease-out border-b border-purple-500/10" id="navbar">
-        <a href="#home" class="hover-trigger bebas text-3xl tracking-tight uppercase group flex items-center">
-            <span id="name-fill">LUKÁŠ VOJTĚŠEK</span>
-            <span class="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-1">_</span>
+    <!-- Apple Navigace -->
+    <nav class="fixed w-full z-50 nav-glass px-6 md:px-12 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
+        <a href="#home" class="font-bold text-xl tracking-tight text-white apple-btn p-2 -ml-2 rounded-xl">
+            Lukáš Vojtěšek
         </a>
-        <div class="hidden md:flex items-center space-x-12 text-sm font-black uppercase tracking-[0.15em] text-gray-400">
-            <a href="#about" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
-                <span class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em] text-white">Profil</span>
-                <span class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Profil</span>
-            </a>
-            <a href="#experience" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
-                <span class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em] text-white">Kariéra</span>
-                <span class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Kariéra</span>
-            </a>
-            <a href="#contact" class="hover-trigger relative group flex flex-col h-[1.5em] overflow-hidden">
-                <span class="block transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em] text-white">Kontakt</span>
-                <span class="block text-purple-400 transition-transform duration-500 ease-out group-hover:-translate-y-full leading-[1.5em]">Kontakt</span>
-            </a>
+        <div class="hidden md:flex items-center space-x-8 text-[13px] font-medium text-[#86868b]">
+            <a href="#about" class="hover:text-white transition-colors">Profil</a>
+            <a href="#projects" class="hover:text-white transition-colors">Projekty</a>
+            <a href="#experience" class="hover:text-white transition-colors">Kariéra</a>
+            <a href="#contact" class="hover:text-white transition-colors bg-white/10 px-4 py-1.5 rounded-full">Kontakt</a>
         </div>
-        <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500 w-0 transition-none shadow-[0_0_15px_rgba(168,85,247,0.8)]" id="scroll-progress"></div>
     </nav>
 
     <main>
-        <section id="home" class="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-12 pt-24 overflow-hidden">
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-purple-700/15 blur-[120px] rounded-full z-[-1] animate-pulse-slow"></div>
+        <!-- Hero Sekce - Produktový styl -->
+        <section id="home" class="relative min-h-[100svh] flex flex-col justify-center items-center text-center px-6 pt-32 overflow-hidden">
+            <!-- Jemný glow v pozadí (inspirováno Apple eventy) -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#bf5af2] opacity-[0.07] blur-[100px] rounded-full z-[-1] pointer-events-none"></div>
             
-            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-8 z-10">
-                    <h1 class="hero-title bebas text-[16vw] sm:text-[14vw] md:text-[12vw] lg:text-[8vw] leading-[0.85] uppercase mb-4 tracking-tight">
-                        <div class="overflow-hidden relative pb-1 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line text-2xl md:text-4xl text-purple-400 tracking-[0.2em] mb-2">Bc.</span>
-                        </div>
-                        <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line pr-2 text-white">Lukáš</span>
-                        </div>
-                        <div class="overflow-hidden relative mt-2 pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">Vojtěšek&nbsp;</span>
-                        </div>
-                    </h1>
-                    <div class="hero-subtitle opacity-0">
-                        <p class="text-gray-300 text-xl md:text-2xl font-light uppercase tracking-wide leading-relaxed mb-6 max-w-2xl">
-                            Jsem variabilní, rychle se učím a propojuji <strong class="text-white font-bold">IT</strong> s <strong class="text-white font-bold">efektivním managementem.</strong>
-                        </p>
-                        <div class="flex flex-wrap items-center gap-4">
-                            <span class="flex items-center gap-2 border border-purple-500/30 rounded-full px-4 py-1.5 bg-white/5">
-                                <span class="flex h-2 w-2 relative">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                                </span>
-                                <span class="text-purple-300 text-xs font-bold uppercase tracking-widest">UTB Zlín FAI</span>
-                            </span>
-                            <span class="text-gray-400 text-xs font-bold uppercase tracking-widest border border-white/10 rounded-full px-4 py-1.5 bg-white/5">
-                                Zlín / Uherské Hradiště & Remote
-                            </span>
-                        </div>
-                    </div>
+            <div class="max-w-4xl mx-auto z-10 hero-content">
+                <span class="inline-block mb-4 text-[#bf5af2] font-semibold text-sm tracking-wide reveal-up">Bc.</span>
+                <h1 class="text-5xl md:text-7xl lg:text-[100px] leading-[1.05] mb-6 reveal-up text-gradient-apple">
+                    Lukáš Vojtěšek.
+                </h1>
+                <p class="text-xl md:text-3xl text-[#86868b] font-medium leading-relaxed max-w-3xl mx-auto mb-10 reveal-up" style="letter-spacing: -0.01em;">
+                    Jsem variabilní, rychle se učím a propojuji IT <br class="hidden md:block">s efektivním managementem.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-16 reveal-up">
+                    <span class="ios-pill">UTB Zlín FAI</span>
+                    <span class="ios-pill-gray">Zlín / Uh. Hradiště & Remote</span>
                 </div>
+            </div>
 
-                <div class="lg:col-span-4 relative hero-image opacity-0 md:translate-x-8 lg:translate-x-0 mt-12 lg:mt-0">
-                    <div class="relative z-10 w-full md:w-3/4 lg:w-full aspect-[4/5] overflow-hidden rounded-2xl group border-2 border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:shadow-[0_0_60px_rgba(168,85,247,0.3)] hover:-translate-y-2 transition-all duration-700 mx-auto bg-[#1a0b2e]">
-                        <img src="fotka.jpeg" alt="Lukáš Vojtěšek" class="w-full h-full object-cover opacity-80 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-expo-out">
-                        <div class="absolute inset-0 border-2 border-white/10 rounded-2xl pointer-events-none group-hover:border-purple-400/50 transition-colors duration-500"></div>
-                    </div>
+            <!-- Prezentace profilovky jako "produktu" -->
+            <div class="w-full max-w-5xl mx-auto px-6 reveal-up relative z-10" style="margin-top: -2rem;">
+                <div class="relative w-full aspect-[21/9] md:aspect-[2.5/1] overflow-hidden rounded-[32px] md:rounded-[40px] border border-white/10">
+                    <img src="fotka.jpeg" alt="Lukáš Vojtěšek" class="w-full h-full object-cover object-top opacity-80" onerror="this.src='https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=2000&auto=format&fit=crop';">
+                    <!-- Apple-like vignette -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                 </div>
             </div>
         </section>
 
+        <!-- Akademická Cesta -->
         <section class="py-32 px-6 md:px-12 relative z-10">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="reveal-up bebas text-5xl md:text-7xl mb-16 uppercase text-white">Akademická <span class="text-purple-500">Cesta</span></h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal-up">
+                    <h2 class="text-4xl md:text-5xl text-white mb-4">Akademická cesta.</h2>
+                    <p class="text-[#86868b] text-xl">Základy pro řešení složitých systémů.</p>
+                </div>
                 
                 <div class="space-y-6">
-                    <div class="reveal-up group glass-card hover:bg-purple-900/20 hover:border-purple-500/50 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 hover-trigger relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative z-10">
-                            <span class="text-white bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs mb-5 inline-block shadow-[0_0_15px_rgba(168,85,247,0.5)]">2026 - Současnost</span>
-                            <a href="https://www.utb.cz" target="_blank" class="block">
-                                <h3 class="bebas text-4xl md:text-5xl uppercase text-white group-hover:text-purple-300 transition-colors">Univerzita Tomáše Bati ve Zlíně</h3>
-                            </a>
-                            <a href="https://www.utb.cz" target="_blank" class="text-purple-400 hover:text-pink-400 text-sm tracking-widest uppercase font-bold mt-3 inline-block transition-colors">www.utb.cz</a>
-                        </div>
-                        <div class="mt-6 md:mt-0 md:text-right relative z-10">
-                            <p class="font-bold text-xl md:text-2xl text-white">Bezpečnostní management</p>
-                            <p class="text-purple-300 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Navazující magisterské studium (Ing.)</p>
-                            <p class="text-gray-500 font-medium text-xs uppercase tracking-wider mt-1">Fakulta aplikované informatiky</p>
-                        </div>
-                    </div>
-
-                    <div class="reveal-up group glass-card hover:bg-white/5 hover:border-purple-500/30 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 hover-trigger relative">
-                        <div class="relative z-10">
-                            <span class="text-purple-200 bg-purple-900/40 border border-purple-500/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs mb-5 inline-block">2023 - 2026 (Absolvováno)</span>
-                            <a href="https://www.utb.cz" target="_blank" class="block">
-                                <h3 class="bebas text-4xl md:text-5xl uppercase text-gray-300 group-hover:text-white transition-colors">Univerzita Tomáše Bati ve Zlíně</h3>
-                            </a>
-                        </div>
-                        <div class="mt-6 md:mt-0 md:text-right relative z-10">
-                            <p class="font-bold text-xl md:text-2xl text-gray-200">Informační technologie v administrativě <span class="text-purple-400 ml-1">Bc.</span></p>
-                            <p class="text-gray-400 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Bakalářské studium</p>
-                            <p class="text-gray-500 font-medium text-xs uppercase tracking-wider mt-1">Fakulta aplikované informatiky</p>
-                        </div>
-                    </div>
-
-                    <div class="reveal-up group glass-card opacity-80 hover:opacity-100 hover:bg-white/5 hover:border-white/20 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 hover-trigger relative">
-                        <div class="relative z-10">
-                            <span class="text-gray-400 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-xs mb-5 inline-block">2019 - 2023</span>
-                            <a href="https://www.spsoa-ub.cz" target="_blank" class="block">
-                                <h3 class="bebas text-3xl md:text-4xl uppercase text-gray-500 group-hover:text-gray-300 transition-colors">SPŠ a OA Uherský Brod</h3>
-                            </a>
-                        </div>
-                        <div class="mt-6 md:mt-0 md:text-right relative z-10">
-                            <p class="font-bold text-lg md:text-xl text-gray-400 group-hover:text-gray-200 transition-colors">Strojírenství - Metrologie</p>
-                            <p class="text-gray-500 font-medium text-xs md:text-sm uppercase tracking-wider mt-2">Maturitní zkouška</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="py-32 px-6 md:px-12 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-                <div class="reveal-up lg:col-span-8 p-10 md:p-16 glass-card bg-gradient-to-br from-purple-900/40 to-black/60 border border-purple-500/20 rounded-[2rem] flex flex-col justify-center transition-all duration-500 hover:shadow-[0_20px_80px_-20px_rgba(168,85,247,0.3)] shadow-2xl relative overflow-hidden hover-trigger group">
-                    <div class="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/20 blur-[80px] rounded-full pointer-events-none group-hover:bg-purple-500/30 transition-colors duration-700"></div>
-
-                    <h2 class="bebas text-5xl md:text-7xl mb-8 uppercase text-white relative z-10">Management <span class="text-purple-400">&</span> Adaptabilita</h2>
-                    
-                    <p class="text-gray-300 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl font-light relative z-10">
-                        Hledám prostor a tým, který si mě "vezme pod křídla" a kde budu moci profesně růst. Mou největší předností je, že <strong class="text-white font-semibold">se rychle učím a přizpůsobuji novým věcem.</strong> Umím propojit logické uvažování s <strong class="text-white font-semibold border-b border-purple-500 pb-1">nástroji umělé inteligence</strong>, což mi šetří čas na řešení samotných procesů a organizaci.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-4 mb-8 relative z-10">
-                        <span class="inline-block px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-['Bebas_Neue'] text-xl md:text-2xl uppercase tracking-widest rounded-xl shadow-[0_5px_20px_rgba(168,85,247,0.3)] cursor-default">Koordinace Týmu</span>
-                        <span class="inline-block px-6 py-2 bg-gradient-to-r from-blue-700 to-cyan-600 text-white font-['Bebas_Neue'] text-xl md:text-2xl uppercase tracking-widest rounded-xl shadow-[0_5px_20px_rgba(37,99,235,0.3)] cursor-default">Rychlá Adaptace</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 mb-8 relative z-10">
-                        <span class="tech-tag-dark hover-trigger">Projektové řízení</span>
-                        <span class="tech-tag-dark hover-trigger">Analýza procesů</span>
-                        <span class="tech-tag-dark hover-trigger">Týmová spolupráce</span>
-                        <span class="tech-tag-dark hover-trigger border-purple-400 text-purple-300">AI Integration</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 pt-8 border-t border-white/10 relative z-10">
-                        <span class="dark-tag">Angličtina B2/C1</span>
-                        <span class="dark-tag">ŘP Skupiny B</span>
-                    </div>
-                </div>
-                
-                <div class="reveal-up lg:col-span-4 p-10 md:p-12 rounded-[2rem] glass-card bg-black/50 text-white flex flex-col justify-between relative overflow-hidden group hover-trigger border border-white/5 hover:border-purple-500/30 transition-colors">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"></div>
-                    <div class="bebas text-2xl text-purple-400 uppercase relative z-10 tracking-widest">Nástroje & Workflow</div>
-                    <div class="relative z-10 mt-16 lg:mt-0">
-                        <h3 class="bebas text-6xl md:text-7xl leading-none uppercase mb-6">AI<br><span class="text-white">Driven</span></h3>
-                        <div class="h-[2px] w-full bg-white/10 mb-6 relative overflow-hidden">
-                             <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-expo-out"></div>
-                        </div>
-                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 group-hover:text-white transition-colors leading-relaxed">ChatGPT / Claude / Gemini / Copilot / Gamma</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PROJEKTY A INICIATIVY -->
-            <div class="max-w-7xl mx-auto mt-8 reveal-up">
-                <h2 class="bebas text-4xl md:text-5xl mb-8 uppercase text-white px-4">Projekty <span class="text-purple-500">& Iniciativy</span></h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Projekt 1: Videomapping -->
-                    <div class="p-10 md:p-12 glass-card border border-purple-500/20 rounded-[2rem] relative overflow-hidden shadow-2xl hover-trigger transition-all duration-500 hover:border-purple-500/50 hover:bg-white/5 group flex flex-col h-full">
-                        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-purple-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-purple-500/20 transition-colors duration-700"></div>
-                        
-                        <div class="inline-flex items-center gap-2 border border-purple-500/30 rounded-full px-4 py-1.5 bg-purple-900/20 backdrop-blur-md self-start mb-6 z-10">
-                            <span class="bebas text-base text-purple-300">Vedení Týmu</span>
-                        </div>
-
-                        <h3 class="bebas text-4xl md:text-5xl uppercase tracking-tight text-white mb-4 z-10">Organizace<br><span class="grad-text">Videomappingu</span></h3>
-
-                        <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-8 font-light flex-grow z-10">
-                            Úspěšně jsem koordinoval tým během náročné meziškolní soutěže ve videomappingu. Odpovídal jsem za rozdělení rolí, hlídání termínů a synchronizaci kreativních výstupů. Výsledkem této efektivní organizace bylo <strong class="text-white font-semibold">výborné 3. místo</strong> v silné konkurenci.
-                        </p>
-
-                        <div class="relative w-full aspect-[21/9] rounded-xl overflow-hidden border border-purple-500/30 mt-auto z-10">
-                            <img src="videomapping.jpg" alt="Videomapping Tým" class="w-full h-full object-cover mix-blend-luminosity opacity-80 group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000&auto=format&fit=crop';">
-                        </div>
-                    </div>
-
-                    <!-- Projekt 2: Tento web -->
-                    <div class="p-10 md:p-12 glass-card border border-pink-500/20 rounded-[2rem] relative overflow-hidden shadow-2xl hover-trigger transition-all duration-500 hover:border-pink-500/50 hover:bg-white/5 group flex flex-col h-full">
-                        <div class="absolute -left-10 -bottom-10 w-64 h-64 bg-pink-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-pink-500/20 transition-colors duration-700"></div>
-                        
-                        <div class="inline-flex items-center gap-2 border border-pink-500/30 rounded-full px-4 py-1.5 bg-pink-900/20 backdrop-blur-md self-start mb-6 z-10">
-                            <span class="bebas text-base text-pink-300">Design & IT</span>
-                        </div>
-
-                        <h3 class="bebas text-4xl md:text-5xl uppercase tracking-tight text-white mb-4 z-10">Osobní<br><span class="text-pink-400">Portfolio</span></h3>
-
-                        <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-8 font-light flex-grow z-10">
-                            Tento web je ukázkou mého přístupu k práci. Představuje funkční propojení mých znalostí z IT, moderního designu a využití <strong class="text-white font-semibold">umělé inteligence při kódování</strong>. Rád tvořím věci, které jsou nejen estetické, ale hlavně dávají smysl a plní svůj účel.
-                        </p>
-
-                        <div class="flex flex-wrap gap-3 mt-auto z-10 pt-6">
-                            <span class="dark-tag">HTML/CSS/JS</span>
-                            <span class="dark-tag">Tailwind CSS</span>
-                            <span class="dark-tag">GSAP Animations</span>
-                            <span class="dark-tag border-pink-500/50 text-pink-300 bg-pink-900/20">AI Workflow</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PRACOVNÍ HISTORIE -->
-        <section id="experience" class="py-32 px-6 md:px-12 relative border-t border-purple-500/20 rounded-t-[3rem] -mt-8 z-20 glass-card bg-black/80">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-purple-900/10 blur-[150px] rounded-full pointer-events-none"></div>
-
-            <div class="max-w-5xl mx-auto relative z-10">
-                <h2 class="reveal-up bebas text-6xl md:text-8xl mb-24 uppercase text-center text-white">Pracovní <span class="text-purple-500">Historie</span></h2>
-
-                <!-- Hlavní zkušenost -->
-                <div class="reveal-scale bg-gradient-to-br from-purple-900/40 to-[#0a0514] text-white p-10 md:p-16 rounded-[3rem] mb-12 relative overflow-hidden group hover-trigger shadow-2xl shadow-black/80 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-500 backdrop-blur-xl">
-                    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 group-hover:bg-purple-500/30 transition-colors duration-700 pointer-events-none"></div>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 relative z-10">
+                    <!-- Navazující studium (Zvýrazněné) -->
+                    <div class="reveal-up liquid-glass p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center apple-btn cursor-default">
                         <div>
-                            <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block shadow-[0_5px_20px_rgba(168,85,247,0.4)]">Aktuální pozice</span>
-                            <h3 class="bebas text-6xl md:text-8xl uppercase tracking-tight text-white">Meetcloud</h3>
+                            <span class="ios-pill mb-4 inline-block">2026 - Současnost</span>
+                            <h3 class="text-2xl md:text-3xl text-white mb-1">Univerzita Tomáše Bati ve Zlíně</h3>
+                            <a href="https://www.utb.cz" target="_blank" class="text-[#0A84FF] hover:underline text-sm font-medium">www.utb.cz ↗</a>
                         </div>
-                        <span class="bebas text-2xl md:text-3xl text-purple-400 mt-6 md:mt-0 tracking-widest">2026 - Současnost</span>
+                        <div class="mt-6 md:mt-0 md:text-right">
+                            <p class="font-semibold text-xl text-white">Bezpečnostní management</p>
+                            <p class="text-[#86868b] font-medium text-sm mt-1">Navazující magisterské studium (Ing.)</p>
+                            <p class="text-[#86868b] font-medium text-xs mt-1">Fakulta aplikované informatiky</p>
+                        </div>
                     </div>
-                    <div class="relative z-10 border-t border-purple-500/20 pt-8">
-                        <p class="text-purple-300 text-2xl font-bold uppercase tracking-widest mb-4">Externí projektant</p>
-                        <p class="text-gray-300 text-xl leading-relaxed max-w-3xl font-light">
-                        Působím jako <strong class="text-white font-bold">externí projektant</strong> pro společnost Meetcloud. Mám na starosti přípravu, řízení a celkovou koordinaci svěřených projektů v dynamickém prostředí, kde uplatňuji svou adaptabilitu.
+
+                    <!-- Bakalář -->
+                    <div class="reveal-up liquid-glass p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center apple-btn cursor-default">
+                        <div>
+                            <span class="ios-pill-gray mb-4 inline-block">2023 - 2026 (Absolvováno)</span>
+                            <h3 class="text-2xl md:text-3xl text-[#f5f5f7] mb-1">Univerzita Tomáše Bati ve Zlíně</h3>
+                        </div>
+                        <div class="mt-6 md:mt-0 md:text-right">
+                            <p class="font-semibold text-xl text-white">IT v administrativě <span class="text-[#86868b] ml-1 font-normal">Bc.</span></p>
+                            <p class="text-[#86868b] font-medium text-sm mt-1">Bakalářské studium</p>
+                        </div>
+                    </div>
+
+                    <!-- Střední -->
+                    <div class="reveal-up liquid-glass p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center apple-btn cursor-default opacity-80">
+                        <div>
+                            <span class="ios-pill-gray mb-4 inline-block text-[11px]">2019 - 2023</span>
+                            <h3 class="text-xl md:text-2xl text-[#86868b] mb-1">SPŠ a OA Uherský Brod</h3>
+                        </div>
+                        <div class="mt-4 md:mt-0 md:text-right">
+                            <p class="font-semibold text-lg text-[#f5f5f7]">Strojírenství - Metrologie</p>
+                            <p class="text-[#86868b] font-medium text-sm mt-1">Maturitní zkouška</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Management & Adaptabilita -->
+        <section id="about" class="py-24 px-6 md:px-12 relative overflow-hidden">
+            <div class="max-w-5xl mx-auto liquid-glass overflow-hidden reveal-up">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="p-10 md:p-16 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-center">
+                        <h2 class="text-3xl md:text-4xl text-white mb-6">Management<br><span class="text-[#86868b]">a Adaptabilita.</span></h2>
+                        <p class="text-[#a1a1a6] text-lg leading-relaxed font-medium mb-8">
+                            Hledám prostor a tým, který si mě "vezme pod křídla". Mou největší předností je, že <span class="text-white">se rychle učím a přizpůsobuji novým věcem.</span> Umím propojit logické uvažování s moderními nástroji umělé inteligence, což mi šetří čas na řešení procesů.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="ios-pill">Koordinace Týmu</span>
+                            <span class="ios-pill">Rychlá Adaptace</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-10 md:p-16 flex flex-col justify-center bg-white/[0.02]">
+                        <h3 class="text-xl text-[#86868b] font-semibold mb-6">Nástroje & Workflow</h3>
+                        <h4 class="text-5xl text-white font-bold mb-4 tracking-tight">AI Driven.</h4>
+                        <p class="text-[#a1a1a6] text-base leading-relaxed mb-8">
+                            ChatGPT / Claude / Gemini / Copilot / Gamma
+                        </p>
+                        
+                        <div class="mt-auto space-y-4 border-t border-white/10 pt-8">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-[#86868b]">Jazyky</span>
+                                <span class="text-white font-medium">Angličtina B2/C1</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-[#86868b]">Ostatní</span>
+                                <span class="text-white font-medium">ŘP Skupiny B</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projekty (Mřížka ala Apple iOS Control Center / App Store) -->
+        <section id="projects" class="py-24 px-6 md:px-12 relative z-10">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 reveal-up">
+                    <h2 class="text-4xl md:text-5xl text-white mb-4">Projekty.</h2>
+                    <p class="text-[#86868b] text-xl">Kde teorie potkává praxi.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Projekt 1 -->
+                    <div class="liquid-glass p-8 flex flex-col h-full reveal-up apple-btn hover:bg-white/[0.08] cursor-default">
+                        <span class="ios-pill self-start mb-6">Vedení Týmu (3. Místo)</span>
+                        <h3 class="text-3xl text-white mb-3">Organizace Videomappingu</h3>
+                        <p class="text-[#a1a1a6] leading-relaxed mb-8 flex-grow">
+                            Úspěšně jsem koordinoval tým během náročné meziškolní soutěže ve videomappingu. Odpovídal jsem za rozdělení rolí, hlídání termínů a synchronizaci výstupů.
+                        </p>
+                        <div class="relative w-full aspect-[16/9] rounded-[20px] overflow-hidden">
+                            <img src="videomapping.jpg" alt="Videomapping" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1000&auto=format&fit=crop';">
+                        </div>
+                    </div>
+
+                    <!-- Projekt 2 -->
+                    <div class="liquid-glass p-8 flex flex-col h-full reveal-up apple-btn hover:bg-white/[0.08] cursor-default">
+                        <span class="ios-pill self-start mb-6 bg-blue-500/15 text-[#0A84FF] border-blue-500/30">Design & AI Workflow</span>
+                        <h3 class="text-3xl text-white mb-3">Osobní Portfolio</h3>
+                        <p class="text-[#a1a1a6] leading-relaxed mb-8 flex-grow">
+                            Tento web je ukázkou mého přístupu k práci. Představuje funkční propojení mých znalostí z IT, designu vycházejícího z Apple HIG a nasazení umělé inteligence pro optimalizaci tvorby kódu.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="ios-pill-gray">HTML/CSS/JS</span>
+                            <span class="ios-pill-gray">Tailwind CSS</span>
+                            <span class="ios-pill-gray">GSAP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kariéra -->
+        <section id="experience" class="py-32 px-6 md:px-12 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal-up">
+                    <h2 class="text-4xl md:text-5xl text-white mb-4">Kariéra.</h2>
+                    <p class="text-[#86868b] text-xl">Dosažené zkušenosti.</p>
+                </div>
+
+                <!-- Hlavní role -->
+                <div class="liquid-glass p-10 md:p-14 mb-10 reveal-up">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-white/10 pb-8">
+                        <div>
+                            <span class="ios-pill mb-4 inline-block">Aktuální pozice</span>
+                            <h3 class="text-4xl md:text-5xl text-white">Meetcloud</h3>
+                        </div>
+                        <span class="text-xl text-[#86868b] font-medium mt-4 md:mt-0">2026 - Současnost</span>
+                    </div>
+                    <div>
+                        <p class="text-2xl text-white font-semibold mb-3">Externí projektant</p>
+                        <p class="text-[#a1a1a6] text-lg leading-relaxed">
+                            Působím jako <span class="text-white">externí projektant</span> pro společnost Meetcloud. Mám na starosti přípravu, řízení a celkovou koordinaci svěřených projektů v dynamickém prostředí.
                         </p>
                     </div>
                 </div>
 
-                <!-- AKORDEON - Brigády a praxe -->
-                <div class="reveal-up glass-card rounded-[2rem] border border-white/10 hover:border-purple-500/30 transition-colors duration-300 overflow-hidden">
-                    <button id="toggle-experience" class="w-full px-8 py-8 md:px-12 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors group">
-                        <div class="text-left">
-                            <h3 class="bebas text-3xl md:text-4xl uppercase text-gray-200 group-hover:text-white transition-colors">Předchozí praxe a provozní zkušenosti</h3>
-                            <p class="text-xs font-bold uppercase tracking-widest text-purple-400 mt-2">2018 - 2026</p>
+                <!-- iOS styl list pro starší zkušenosti -->
+                <div class="liquid-glass reveal-up overflow-hidden">
+                    <button id="toggle-experience" class="w-full p-6 md:p-8 flex justify-between items-center text-left hover:bg-white/[0.03] transition-colors group">
+                        <div>
+                            <h3 class="text-xl text-white font-semibold">Předchozí praxe a provoz</h3>
+                            <p class="text-sm text-[#86868b] mt-1">2018 - 2026</p>
                         </div>
-                        <div class="w-12 h-12 rounded-full bg-purple-900/40 border border-purple-500/30 flex items-center justify-center flex-shrink-0 transition-transform duration-500" id="accordion-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform duration-300" id="accordion-icon">
+                            <!-- Apple chevron down -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-white" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                             </svg>
                         </div>
                     </button>
                     
-                    <div id="experience-content" class="accordion-content max-h-0 opacity-0 overflow-hidden bg-black/40">
-                        <div class="p-8 md:p-12 border-t border-white/5 space-y-12 relative before:absolute before:left-[3.5rem] md:before:left-[5rem] before:top-12 before:h-[calc(100%-6rem)] before:w-[1px] before:bg-gradient-to-b before:from-purple-500/50 before:to-transparent before:hidden md:before:block">
+                    <div id="experience-content" class="accordion-content max-h-0 opacity-0 overflow-hidden bg-black/20">
+                        <div class="px-6 md:px-8 pb-4">
                             
-                            <!-- Orkla -->
-                            <div class="job-item relative flex flex-col md:flex-row gap-6 md:gap-12 w-full group">
-                                <div class="absolute left-[-1.5rem] md:left-[-1rem] top-2 w-3 h-3 bg-[#0a0514] border-2 border-purple-500 rounded-full hidden md:block z-20 group-hover:bg-purple-500 transition-all"></div>
-                                <div class="w-24 md:w-32 flex-shrink-0 pt-1">
-                                    <span class="bebas text-2xl md:text-3xl text-purple-400">2023 - 2026</span>
+                            <!-- Jednotlivé položky simulují tabulku (List View) v Nastavení iOS -->
+                            <div class="ios-list-item py-6">
+                                <div class="flex flex-col md:flex-row justify-between mb-2">
+                                    <h4 class="text-lg text-white font-medium">Orkla Foods</h4>
+                                    <span class="text-[#86868b] text-sm">2023 - 2026</span>
                                 </div>
-                                <div class="flex-grow">
-                                    <h4 class="bebas text-2xl md:text-3xl uppercase mb-1 text-white">Orkla Foods</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-purple-300/70 mb-3">Logistika & Provoz</p>
-                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed font-light">Dlouhodobá praxe v provozu s více než <strong class="text-gray-200">1200+ odpracovanými hodinami</strong>. Z původní pozice smluvního vychystávače jsem postupně přebral zodpovědnost za relokaci menších skladových úseků a asistoval při koordinaci interní logistiky.</p>
-                                </div>
+                                <p class="text-sm text-[#0A84FF] font-medium mb-2">Logistika & Provoz</p>
+                                <p class="text-[#a1a1a6] text-sm leading-relaxed">Více než 1200+ odpracovaných hodin. Z pozice vychystávače jsem přebral zodpovědnost za relokaci úseků a asistenci u interní logistiky.</p>
                             </div>
 
-                            <!-- Solar Global -->
-                            <div class="job-item relative flex flex-col md:flex-row gap-6 md:gap-12 w-full group">
-                                <div class="absolute left-[-1.5rem] md:left-[-1rem] top-2 w-3 h-3 bg-[#0a0514] border-2 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-all"></div>
-                                <div class="w-24 md:w-32 flex-shrink-0 pt-1">
-                                    <span class="bebas text-2xl md:text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2023</span>
+                            <div class="ios-list-item py-6">
+                                <div class="flex flex-col md:flex-row justify-between mb-2">
+                                    <h4 class="text-lg text-white font-medium">Solar Global Service</h4>
+                                    <span class="text-[#86868b] text-sm">2023</span>
                                 </div>
-                                <div class="flex-grow">
-                                    <h4 class="bebas text-2xl md:text-3xl uppercase mb-1 text-gray-300 group-hover:text-white transition-colors">Solar Global Service</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-300/70 mb-3 transition-colors">Projektová asistence</p>
-                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed font-light">Spolupráce na přípravě technické dokumentace pro solární elektrárny, úpravy výkresů v AutoCADu a zajišťování plynulé komunikace informací směrem k realizačnímu týmu.</p>
-                                </div>
+                                <p class="text-sm text-[#0A84FF] font-medium mb-2">Projektová asistence</p>
+                                <p class="text-[#a1a1a6] text-sm leading-relaxed">Příprava technické dokumentace, úpravy v AutoCADu a zajišťování komunikace směrem k realizačnímu týmu.</p>
                             </div>
 
-                            <!-- MESIT -->
-                            <div class="job-item relative flex flex-col md:flex-row gap-6 md:gap-12 w-full group">
-                                <div class="absolute left-[-1.5rem] md:left-[-1rem] top-2 w-3 h-3 bg-[#0a0514] border-2 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-all"></div>
-                                <div class="w-24 md:w-32 flex-shrink-0 pt-1">
-                                    <span class="bebas text-2xl md:text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2022</span>
+                            <div class="ios-list-item py-6">
+                                <div class="flex flex-col md:flex-row justify-between mb-2">
+                                    <h4 class="text-lg text-white font-medium">MESIT Holding</h4>
+                                    <span class="text-[#86868b] text-sm">2022</span>
                                 </div>
-                                <div class="flex-grow">
-                                    <h4 class="bebas text-2xl md:text-3xl uppercase mb-1 text-gray-300 group-hover:text-white transition-colors">MESIT Holding</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-300/70 mb-3 transition-colors">Analýza kvality & Reporty</p>
-                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed font-light">Provádění kontrolních procesů ve výrobě, zpracování dat z měření a předávání reportů vedení kvality pro další optimalizaci.</p>
-                                </div>
+                                <p class="text-sm text-[#0A84FF] font-medium mb-2">Analýza kvality & Reporty</p>
+                                <p class="text-[#a1a1a6] text-sm leading-relaxed">Provádění kontrolních procesů ve výrobě, zpracování dat a předávání reportů vedení kvality.</p>
                             </div>
 
-                            <!-- PRIMA BILAVČÍK -->
-                            <div class="job-item relative flex flex-col md:flex-row gap-6 md:gap-12 w-full group">
-                                <div class="absolute left-[-1.5rem] md:left-[-1rem] top-2 w-3 h-3 bg-[#0a0514] border-2 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-all"></div>
-                                <div class="w-24 md:w-32 flex-shrink-0 pt-1">
-                                    <span class="bebas text-2xl md:text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2021</span>
+                            <div class="ios-list-item py-6">
+                                <div class="flex flex-col md:flex-row justify-between mb-2">
+                                    <h4 class="text-lg text-white font-medium">PRIMA BILAVČÍK</h4>
+                                    <span class="text-[#86868b] text-sm">2021</span>
                                 </div>
-                                <div class="flex-grow">
-                                    <h4 class="bebas text-2xl md:text-3xl uppercase mb-1 text-gray-300 group-hover:text-white transition-colors">PRIMA BILAVČÍK</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-300/70 mb-3 transition-colors">Laboratorní technik</p>
-                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed font-light">Práce s přesnými metrologickými daty, dodržování striktních postupů a podílení se na zajištění jakosti produktů.</p>
-                                </div>
+                                <p class="text-sm text-[#0A84FF] font-medium mb-2">Laboratorní technik</p>
+                                <p class="text-[#a1a1a6] text-sm leading-relaxed">Práce s přesnými metrologickými daty a podílení se na zajištění jakosti produktů.</p>
                             </div>
 
-                            <!-- DFK Cab & Aircraft (Spojeno pro kompaktnost) -->
-                            <div class="job-item relative flex flex-col md:flex-row gap-6 md:gap-12 w-full group">
-                                <div class="absolute left-[-1.5rem] md:left-[-1rem] top-2 w-3 h-3 bg-[#0a0514] border-2 border-gray-600 rounded-full hidden md:block z-20 group-hover:border-purple-500 transition-all"></div>
-                                <div class="w-24 md:w-32 flex-shrink-0 pt-1">
-                                    <span class="bebas text-2xl md:text-3xl text-gray-500 group-hover:text-purple-400 transition-colors">2018-2020</span>
+                            <div class="ios-list-item py-6">
+                                <div class="flex flex-col md:flex-row justify-between mb-2">
+                                    <h4 class="text-lg text-white font-medium">DFK Cab / Aircraft Ind.</h4>
+                                    <span class="text-[#86868b] text-sm">2018 - 2020</span>
                                 </div>
-                                <div class="flex-grow">
-                                    <h4 class="bebas text-2xl md:text-3xl uppercase mb-1 text-gray-300 group-hover:text-white transition-colors">DFK Cab / Aircraft Ind.</h4>
-                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-purple-300/70 mb-3 transition-colors">Expedice & Výpomoc</p>
-                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed font-light">Získání základních pracovních návyků. Od přípravy a kontroly exportních zásilek (DFK) až po pochopení procesů ve velkých výrobních celcích (Aircraft/Hanon).</p>
-                                </div>
+                                <p class="text-sm text-[#0A84FF] font-medium mb-2">Expedice & Výpomoc</p>
+                                <p class="text-[#a1a1a6] text-sm leading-relaxed">Získání pracovních návyků od expedice (DFK) až po pochopení procesů velkovýroby (Aircraft/Hanon).</p>
                             </div>
 
                         </div>
@@ -454,65 +382,40 @@
             </div>
         </section>
 
-        <footer id="contact" class="py-32 px-6 md:px-12 bg-black text-white rounded-t-[4rem] -mt-10 overflow-hidden relative border-t border-purple-500/20 z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
-            <div class="absolute bottom-0 left-0 w-[800px] h-[800px] bg-purple-900/20 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
-            
-            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center lg:items-end gap-20 relative z-10">
-                <div class="text-center lg:text-left">
-                    <h2 class="reveal-up bebas text-[16vw] lg:text-[11vw] uppercase leading-[0.8] mb-8 tracking-tight">
-                        <div class="overflow-hidden relative pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line pr-2 text-white">Připraven</span>
-                        </div>
-                        <div class="overflow-hidden relative mt-2 pb-4 pr-6 -mr-6">
-                            <span class="block translate-y-[110%] hero-text-line grad-text pr-2">růst s vámi.&nbsp;</span>
-                        </div>
-                    </h2>
-                    <div class="inline-flex items-center border border-purple-500/30 rounded-full px-6 py-3 bg-purple-900/20 backdrop-blur-md shadow-[0_0_20px_rgba(168,85,247,0.15)] flex-wrap justify-center lg:justify-start gap-4">
-                        <div class="flex items-center">
-                            <span class="relative flex h-3 w-3 mr-3">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                            </span>
-                            <p class="text-xs font-bold uppercase tracking-[0.2em] text-purple-200">
-                                 Otevřený novým výzvám
-                            </p>
-                        </div>
-                        <span class="text-gray-500 hidden md:block">|</span>
-                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
-                             Zlínský kraj / Remote
-                        </p>
-                    </div>
+        <!-- Kontakt -->
+        <footer id="contact" class="py-32 px-6 md:px-12 border-t border-white/10 relative z-10 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-5xl md:text-7xl text-white font-bold mb-6 reveal-up">Připraven růst.</h2>
+                <p class="text-[#86868b] text-xl mb-12 reveal-up">Otevřený nabídkám a výzvám v IT a managementu.</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-6 mb-24 reveal-up">
+                    <a href="mailto:l_vojtesek@utb.cz" class="liquid-glass px-8 py-6 apple-btn flex flex-col items-center min-w-[280px]">
+                        <span class="text-sm text-[#86868b] mb-2">Univerzitní email</span>
+                        <span class="text-xl text-white font-medium">l_vojtesek@utb.cz</span>
+                    </a>
+                    <a href="mailto:lukas.vojtesek04@gmail.com" class="liquid-glass px-8 py-6 apple-btn flex flex-col items-center min-w-[280px]">
+                        <span class="text-sm text-[#86868b] mb-2">Osobní email</span>
+                        <span class="text-xl text-[#0A84FF] font-medium">lukas.vojtesek04@gmail.com</span>
+                    </a>
                 </div>
 
-                <div class="flex flex-col space-y-6 w-full lg:w-auto">
-                    <a href="mailto:l_vojtesek@utb.cz" class="hover-trigger group block glass-card hover:bg-purple-900/30 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
-                        <span class="block bebas text-3xl md:text-5xl text-gray-300 group-hover:text-white transition-colors">l_vojtesek@utb.cz</span>
-                        <span class="block text-xs uppercase tracking-widest text-purple-400/60 group-hover:text-purple-300 mt-3">Univerzitní email</span>
-                    </a>
-                    <a href="mailto:lukas.vojtesek04@gmail.com" class="hover-trigger group block glass-card hover:bg-purple-900/30 hover:border-purple-500/60 rounded-3xl py-10 px-12 transition-all duration-500 ease-expo-out text-center shadow-lg">
-                        <span class="block bebas text-3xl md:text-5xl text-gray-300 group-hover:text-white transition-colors">lukas.vojtesek04@gmail.com</span>
-                        <span class="block text-xs uppercase tracking-widest text-purple-400/60 group-hover:text-purple-300 mt-3">Osobní email</span>
-                    </a>
+                <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[#86868b] text-sm">
+                    <p>© 2026 Bc. Lukáš Vojtěšek</p>
+                    <p class="mt-4 md:mt-0">Zlín / Uherské Hradiště</p>
                 </div>
-            </div>
-             <div class="max-w-7xl mx-auto mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-600 text-xs font-bold uppercase tracking-[0.2em]">
-                <p>2026 Bc. Lukáš Vojtěšek</p>
-                <p class="mt-4 md:mt-0">Zlín / Uherské Hradiště</p>
             </div>
         </footer>
     </main>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
-        const expoOut = "expo.out"; 
 
+        // Hladké scrollování Lenis
         const lenis = new Lenis({
-            duration: 1.5,
+            duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             smooth: true,
-            mouseMultiplier: 0.8,
-            smoothTouch: false,
         });
 
         function raf(time) {
@@ -525,67 +428,25 @@
         gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
         gsap.ticker.lagSmoothing(0, 0);
 
-        const cursorWrapper = document.querySelector('.cursor-wrapper');
-        const allCursorDots = document.querySelectorAll('.cursor-dot'); 
-
-        if(window.innerWidth > 768) {
-            window.addEventListener('mousemove', (e) => {
-                gsap.to(allCursorDots, {
-                    x: e.clientX,
-                    y: e.clientY,
-                    duration: 0.5,
-                    stagger: 0.04,
-                    ease: "power2.out"
-                });
-            });
-        }
-
-        const tl = gsap.timeline();
-        tl.to('.hero-text-line', { y: 0, duration: 1.4, stagger: 0.15, ease: expoOut, delay: 0.2 })
-          .to('.hero-subtitle', { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.8")
-          .to('.hero-image', { opacity: 1, duration: 1.8, ease: expoOut }, "-=1.2");
-
+        // Apple-style fade up animace
         gsap.utils.toArray('.reveal-up').forEach(elem => {
             gsap.to(elem, {
-                scrollTrigger: { trigger: elem, start: "top 90%", toggleActions: "play none none reverse" },
-                y: 0, opacity: 1, duration: 1, ease: expoOut 
+                scrollTrigger: { trigger: elem, start: "top 85%", toggleActions: "play none none reverse" },
+                y: 0, opacity: 1, duration: 1.2, ease: "power3.out"
             });
         });
 
-        gsap.utils.toArray('.reveal-scale').forEach(elem => {
-            gsap.to(elem, {
-                scrollTrigger: { trigger: elem, start: "top 90%", toggleActions: "play none none reverse" },
-                scale: 1, opacity: 1, duration: 1, ease: expoOut
-            });
-        });
-
-        const nameFill = document.getElementById('name-fill');
-        const navbar = document.querySelector('nav');
-        const progressBar = document.getElementById('scroll-progress');
-        
+        // Jemné chování horní navigace
+        const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
-            
-            nameFill.style.backgroundPosition = `${100 - scrolled}% 0`;
-
-            if (currentScroll <= 50) {
-                 navbar.classList.remove('bg-[#05010a]/90', 'shadow-[0_10px_30px_rgba(168,85,247,0.1)]');
-                 navbar.classList.add('bg-[#05010a]/60');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
             } else {
-                 navbar.classList.add('bg-[#05010a]/90', 'shadow-[0_10px_30px_rgba(168,85,247,0.1)]');
-                 navbar.classList.remove('bg-[#05010a]/60');
+                navbar.classList.remove('shadow-lg');
             }
         });
 
-        gsap.to('.animate-pulse-slow', {
-            scale: 1.1, opacity: 0.2, duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut"
-        });
-
-        // Logika pro Accordion (Brigády)
+        // iOS styl Accordion (Rozbalovací seznam brigád)
         const toggleBtn = document.getElementById('toggle-experience');
         const content = document.getElementById('experience-content');
         const icon = document.getElementById('accordion-icon');
@@ -596,17 +457,12 @@
             if(isClosed) {
                 content.style.maxHeight = content.scrollHeight + 'px';
                 content.style.opacity = '1';
-                icon.classList.add('rotate-180', 'bg-purple-600');
-                icon.classList.remove('bg-purple-900/40');
-                
-                // Refresh ScrollTrigger aby se nespustily animace špatně
+                icon.classList.add('rotate-180');
                 setTimeout(() => ScrollTrigger.refresh(), 600);
             } else {
                 content.style.maxHeight = '0px';
                 content.style.opacity = '0';
-                icon.classList.remove('rotate-180', 'bg-purple-600');
-                icon.classList.add('bg-purple-900/40');
-                
+                icon.classList.remove('rotate-180');
                 setTimeout(() => ScrollTrigger.refresh(), 600);
             }
         });
